@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Primer Programa Node</title>
+<meta name="description" content="Presentación interactiva paso a paso para construir tu primer programa en Node.js.">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+<main class="deck" id="deck">
+  <header class="top">
+    <div class="brand"><span class="sq"></span><span><b>node</b> primer_programa</span></div>
+    <nav class="dots" id="dots" aria-label="Diapositivas"></nav>
+    <div class="count" id="count">01 / 11</div>
+  </header>
+  <div id="slides"></div>
+
+  <div class="avatar" id="avatar" data-mood="happy" aria-hidden="true">
+    <svg viewBox="0 0 200 210">
+      <ellipse cx="100" cy="196" rx="48" ry="7" fill="#000" opacity=".5"/>
+      <line x1="100" y1="32" x2="100" y2="14" stroke="#3a3a42" stroke-width="3" stroke-linecap="round"/>
+      <circle class="tip" cx="100" cy="11" r="6" fill="#ff6bb5"/>
+      <text class="brL" x="6" y="108" font-family="Geist Mono,monospace" font-size="46" font-weight="600" fill="#3b9eff">{</text>
+      <text class="brR" x="160" y="108" font-family="Geist Mono,monospace" font-size="46" font-weight="600" fill="#3b9eff">}</text>
+      <rect x="62" y="150" width="76" height="34" rx="12" fill="#17171a" stroke="#34343b" stroke-width="2"/>
+      <text x="100" y="174" text-anchor="middle" font-family="Geist Mono,monospace" font-size="18" font-weight="600" fill="#50e3c2">&lt;/&gt;</text>
+      <rect x="28" y="30" width="144" height="126" rx="38" fill="#16161a" stroke="#3a3a42" stroke-width="2.5"/>
+      <rect x="40" y="42" width="120" height="102" rx="28" fill="#0a0a0c"/>
+      <g id="eyes">
+        <ellipse class="eye" cx="76" cy="86" rx="9" ry="12.5" fill="#50e3c2"/>
+        <ellipse class="eye" cx="124" cy="86" rx="9" ry="12.5" fill="#50e3c2"/>
+        <circle cx="79" cy="81" r="3.2" fill="#fff"/><circle cx="127" cy="81" r="3.2" fill="#fff"/>
+      </g>
+      <g class="happy" fill="none" stroke="#50e3c2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M65 92 Q76 74 87 92"/><path d="M113 92 Q124 74 135 92"/>
+      </g>
+      <g class="think" fill="#9b9ba4"><circle cx="150" cy="52" r="3"/><circle cx="160" cy="42" r="4"/><circle cx="173" cy="30" r="5"/></g>
+      <ellipse cx="58" cy="112" rx="9" ry="5.5" fill="#ff6bb5" opacity=".5"/>
+      <ellipse cx="142" cy="112" rx="9" ry="5.5" fill="#ff6bb5" opacity=".5"/>
+      <path d="M90 110 Q100 122 110 110" fill="none" stroke="#50e3c2" stroke-width="4.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="bubble" id="bubble" role="status"></div>
+
+  <div class="nav">
+    <button id="prev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="next" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</main>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/util.js"></script>
+<script src="js/highlight.js"></script>
+<script src="js/components.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/content.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/deck.js"></script>
+</body>
+</html>

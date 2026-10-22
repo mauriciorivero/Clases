@@ -1,0 +1,19 @@
+{
+  "name": "primer_programa_node",
+  "version": "1.0.0",
+  "description": "An example program to start learnig with nodejs",
+  "keywords": [
+    "hello",
+    "word",
+    "first",
+    "program",
+    "examples"
+  ],
+  "license": "MIT",
+  "author": "Mauricio Rivero mauro@mrd2.co",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

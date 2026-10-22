@@ -1,0 +1,22 @@
+{
+  "name": "encriptador",
+  "version": "1.0.0",
+  "description": "una aplicacion node para encriptar objetos y datos",
+  "keywords": [
+    "encrypt",
+    "data",
+    "objects",
+    "security"
+  ],
+  "license": "MIT",
+  "author": "@mauriciorivero",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "object-hash": "^3.0.0"
+  }
+}

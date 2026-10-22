@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encriptador con npm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Presentación interactiva: construye un encriptador con Node.js, npm y object-hash en nueve pasos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script>try{var t=localStorage.getItem('encriptador-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<canvas id="stage" aria-hidden="true"></canvas>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">#</span>
+      <span class="brand-name">encriptador</span>
+      <span class="brand-sub">Clase 2 · npm</span>
+    </div>
+    <nav class="rail" id="rail" aria-label="Diapositivas"></nav>
+    <div class="tools">
+      <button class="icon-btn" id="fsBtn" type="button" aria-label="Pantalla completa" title="Pantalla completa (F)">
+        <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" type="button" title="Cambiar tema (T)" data-mode="light" aria-label="Cambiar a modo oscuro">
+        <svg class="ic i-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 9.6A5.6 5.6 0 0 1 6.4 2.5a5.6 5.6 0 1 0 7.1 7.1z"/></svg>
+        <svg class="ic i-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.8"/><path d="M8 1.5v1.4M8 13.1v1.4M1.5 8h1.4M13.1 8h1.4M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>
+        <span class="tt-label">Oscuro</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="deck" id="deck" data-dir="next">
+
+    <!-- 01 · Portada -->
+    <section class="slide" id="portada" data-emblem="hexagon" data-label="Portada" aria-roledescription="diapositiva" aria-label="Portada">
+      <div class="slide-inner cover">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Node.js · Clase 2 · npm</span></p>
+          <h1 class="display">Construye un encriptador con Node.js y npm</h1>
+          <p class="lead" data-anim>Un programa de terminal que recibe los datos de una persona, arma un objeto y lo convierte en hashes con la librería <code>object-hash</code>. Son nueve pasos, de <code>node -v</code> a <code>npm start</code>.</p>
+          <div class="cover-actions" data-anim>
+            <button class="btn btn-primary" type="button" data-goto="next">Empezar <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+            <span class="cover-hint">Avanza con <kbd>→</kbd>. Si te trabas, haz clic en Hashi.</span>
+          </div>
+          <dl class="cover-meta" data-anim>
+            <div><dt>Herramientas</dt><dd>Node.js · npm</dd></div>
+            <div><dt>Librería</dt><dd>object-hash 3.0.0</dd></div>
+            <div><dt>Resultado</dt><dd>3 hashes por persona</dd></div>
+          </dl>
+        </div>
+        <div class="cover-viz">
+          <div class="viz" aria-hidden="true"></div>
+          <p class="hash-caption" data-anim><span>hash({ name: 'mauricio', … })</span><b class="scr">3776f6410707a9f7a3f16ca3d631addb3c2b11f8</b></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · Mapa -->
+    <section class="slide" id="mapa" data-emblem="path" data-label="El proyecto" aria-roledescription="diapositiva" aria-label="El proyecto" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">El proyecto</span><span class="tag">9 pasos</span></p>
+          <h2 class="title">Lo que vas a construir</h2>
+          <p class="lead" data-anim>Al terminar tendrás esta carpeta y un comando que imprime a la persona en JSON junto con tres hashes de sus datos.</p>
+          <div class="editor" data-anim>
+            <div class="ed-bar"><span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="ed-title caps">Explorador</span></div>
+            <div class="tree">
+              <div class="t-row" style="--lvl:0"><span class="t-chev">▾</span><span class="t-name">encriptador</span></div>
+              <div class="t-row" style="--lvl:1"><span class="t-chev">▸</span><span class="t-name">node_modules</span><span class="t-note">paso 3</span></div>
+              <div class="t-row" style="--lvl:1"><span class="t-chev">▾</span><span class="t-name">src</span></div>
+              <div class="t-row t-file" style="--lvl:2"><span class="fi">JS</span><span class="t-name">index.js</span><span class="t-note">pasos 4 a 8</span></div>
+              <div class="t-row t-file" style="--lvl:2"><span class="fi">JS</span><span class="t-name">config.js</span><span class="t-note">paso 7</span></div>
+              <div class="t-row t-file" style="--lvl:1"><span class="fi fi-json">{}</span><span class="t-name">package.json</span><span class="t-note">pasos 2, 3 y 9</span></div>
+              <div class="t-row t-file" style="--lvl:1"><span class="fi fi-json">{}</span><span class="t-name">package-lock.json</span><span class="t-note">paso 3</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="work">
+          <div class="route-head" data-anim><span class="sublabel">Ruta de la clase</span><span class="route-tip">Haz clic en un paso para ir directo</span></div>
+          <ol class="route" data-anim>
+            <li><button class="route-step" type="button" data-goto="paso-1"><span class="route-dot" data-node></span><span class="route-num">01</span><span class="route-name">Revisa tu entorno</span><code>node -v</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-2"><span class="route-dot" data-node></span><span class="route-num">02</span><span class="route-name">Crea package.json</span><code>npm init</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-3"><span class="route-dot" data-node></span><span class="route-num">03</span><span class="route-name">Instala object-hash</span><code>npm i</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-4"><span class="route-dot" data-node></span><span class="route-num">04</span><span class="route-name">Importa la librería</span><code>import</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-5"><span class="route-dot" data-node></span><span class="route-num">05</span><span class="route-name">Hashea una contraseña</span><code>encryptPassword</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-6"><span class="route-dot" data-node></span><span class="route-num">06</span><span class="route-name">Verifica una contraseña</span><code>verifyPassword</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-7"><span class="route-dot" data-node></span><span class="route-num">07</span><span class="route-name">Separa la configuración</span><code>config.js</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-8"><span class="route-dot" data-node></span><span class="route-num">08</span><span class="route-name">Lee los argumentos</span><code>process.argv</code></button></li>
+            <li><button class="route-step" type="button" data-goto="paso-9"><span class="route-dot" data-node></span><span class="route-num">09</span><span class="route-name">Crea el script de inicio</span><code>npm start</code></button></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · Paso 1 -->
+    <section class="slide" id="paso-1" data-emblem="terminal" data-label="Paso 1 · Entorno" aria-roledescription="diapositiva" aria-label="Paso 1: Revisa tu entorno" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 1 de 9</span><span class="tag" data-tool="term">terminal</span></p>
+          <h2 class="title">Revisa tu entorno</h2>
+          <p class="lead" data-anim>Antes de escribir código, confirma que Node.js y npm están instalados. Cada comando responde con un número de versión.</p>
+          <ul class="points" data-anim>
+            <li><code>node</code> ejecuta JavaScript fuera del navegador.</li>
+            <li><code>npm</code> instala paquetes y ejecuta scripts. Viene incluido con Node.js.</li>
+            <li>Si ves <code>command not found</code>, instala Node.js LTS desde nodejs.org y abre una terminal nueva.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar"><span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="ed-title">encriptador — zsh</span></div>
+            <div class="term" data-term="versions"></div>
+          </div>
+          <p class="footnote" data-anim>Versiones del equipo del instructor. Las tuyas pueden ser otras.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · Paso 2 -->
+    <section class="slide" id="paso-2" data-emblem="braces" data-label="Paso 2 · npm init" aria-roledescription="diapositiva" aria-label="Paso 2: Crea package.json con npm init" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 2 de 9</span><span class="tag" data-tool="npm">npm</span></p>
+          <h2 class="title">Crea package.json con npm init</h2>
+          <p class="lead" data-anim><code>npm init</code> te hace preguntas y guarda las respuestas en <code>package.json</code>: nombre, versión, archivo de entrada, scripts y, más adelante, las dependencias.</p>
+          <ul class="points" data-anim>
+            <li><code>npm init -y</code> acepta todos los valores por defecto. Después ajustas el archivo a mano.</li>
+            <li><code>main</code> apunta al archivo de entrada. Aquí es <code>src/index.js</code>.</li>
+            <li><code>"type": "module"</code> habilita <code>import</code>. Lo vas a necesitar en el paso 4.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs" role="tablist" aria-label="Archivos abiertos">
+                <button class="ed-tab" role="tab" type="button" id="t2a" aria-selected="true" aria-controls="p2a"><span class="fi fi-term" aria-hidden="true">&gt;_</span>Terminal</button>
+                <button class="ed-tab" role="tab" type="button" id="t2b" aria-selected="false" aria-controls="p2b" tabindex="-1"><span class="fi fi-json" aria-hidden="true">{}</span>package.json</button>
+              </div>
+            </div>
+            <div class="pane" id="p2a" role="tabpanel" aria-labelledby="t2a"><div class="term term-tall" data-term="init"></div></div>
+            <div class="pane" id="p2b" role="tabpanel" aria-labelledby="t2b" hidden>
+              <div class="ed-crumbs">encriptador › <b>package.json</b></div>
+              <pre class="code" data-src="pkg-init" data-lang="json" data-focus="13-14"></pre>
+            </div>
+          </div>
+          <p class="footnote" data-anim>Salida de npm 12. Otras versiones muestran preguntas parecidas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · Paso 3 -->
+    <section class="slide" id="paso-3" data-emblem="package" data-label="Paso 3 · Instalar" aria-roledescription="diapositiva" aria-label="Paso 3: Instala object-hash" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 3 de 9</span><span class="tag" data-tool="npm">npm</span></p>
+          <h2 class="title">Instala object-hash</h2>
+          <p class="lead" data-anim>Una librería externa es código que alguien publicó en el registro de npm. Un comando la descarga y la anota como dependencia de tu proyecto.</p>
+          <span class="sublabel" data-anim>Qué cambia en tu carpeta</span>
+          <ul class="files" data-anim>
+            <li><span class="fname">node_modules/</span><span class="fdesc">El código descargado. No se edita ni se sube a Git.</span></li>
+            <li><span class="fname">package.json</span><span class="fdesc">Suma <code>"object-hash": "^3.0.0"</code> en <code>dependencies</code>.</span></li>
+            <li><span class="fname">package-lock.json</span><span class="fdesc">Guarda la versión exacta instalada: 3.0.0.</span></li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar"><span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="ed-title">encriptador — zsh</span></div>
+            <div class="term" data-term="install"></div>
+          </div>
+          <div class="callout" data-anim>
+            <h3>¿Y bcrypt o crypto?</h3>
+            <p><code>crypto</code> ya viene con Node.js y no se instala. <code>bcrypt</code> es la librería indicada para guardar contraseñas reales; la verás en el cierre.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · Paso 4 -->
+    <section class="slide" id="paso-4" data-emblem="importArrow" data-label="Paso 4 · import" aria-roledescription="diapositiva" aria-label="Paso 4: Importa la librería" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 4 de 9</span><span class="tag" data-tool="code">código</span></p>
+          <h2 class="title">Importa la librería</h2>
+          <p class="lead" data-anim>En <code>src/index.js</code> traes la función principal de object-hash. El nombre <code>hash</code> lo eliges tú.</p>
+          <ul class="points" data-anim>
+            <li><code>import</code> es sintaxis de módulos ES. Node la acepta cuando package.json dice <code>"type": "module"</code>.</li>
+            <li>npm 12 escribe <code>"type": "commonjs"</code> al usar <code>npm init -y</code>. Cambia el valor a la derecha y compara los dos resultados.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="seg-row" data-anim>
+            <span class="seg-label">package.json → "type"</span>
+            <div class="seg" id="esmSeg" role="radiogroup" aria-label="Valor de type en package.json">
+              <button type="button" role="radio" aria-checked="true" data-type="commonjs">"commonjs"</button>
+              <button type="button" role="radio" aria-checked="false" data-type="module" tabindex="-1">"module"</button>
+            </div>
+          </div>
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs" role="tablist" aria-label="Archivos abiertos">
+                <button class="ed-tab" role="tab" type="button" id="t4a" aria-selected="true" aria-controls="p4a"><span class="fi" aria-hidden="true">JS</span>index.js</button>
+                <button class="ed-tab" role="tab" type="button" id="t4b" aria-selected="false" aria-controls="p4b" tabindex="-1"><span class="fi fi-json" aria-hidden="true">{}</span>package.json</button>
+              </div>
+            </div>
+            <div class="pane" id="p4a" role="tabpanel" aria-labelledby="t4a">
+              <div class="ed-crumbs">encriptador › src › <b>index.js</b></div>
+              <pre class="code" data-src="esm-index" data-lang="javascript" data-focus="2"></pre>
+            </div>
+            <div class="pane" id="p4b" role="tabpanel" aria-labelledby="t4b" hidden>
+              <div class="ed-crumbs">encriptador › <b>package.json</b></div>
+              <pre class="code" id="esmPkg" data-lang="json" data-start="11" data-focus="13"></pre>
+            </div>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">Terminal</span></div>
+              <div class="term term-mid" id="esmTerm"></div>
+              <div class="term-status" id="esmStatus" hidden><i></i><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 · Paso 5 -->
+    <section class="slide" id="paso-5" data-emblem="hash" data-label="Paso 5 · encryptPassword" aria-roledescription="diapositiva" aria-label="Paso 5: Convierte una contraseña en hash" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 5 de 9</span><span class="tag" data-tool="hash">hash</span></p>
+          <h2 class="title">Convierte una contraseña en hash</h2>
+          <p class="lead" data-anim><code>encryptPassword</code> recibe un texto y devuelve su hash: una huella de 40 caracteres que siempre es la misma para la misma entrada.</p>
+          <ul class="points" data-anim>
+            <li>Escribe en la consola de la derecha. Cambia una sola letra y el hash cambia casi por completo.</li>
+            <li>Un hash no se puede revertir. Por eso no existe una función <code>decryptPassword</code>.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi" aria-hidden="true">JS</span>index.js</span></div>
+            </div>
+            <div class="ed-crumbs">encriptador › src › index.js › <b>encryptPassword</b></div>
+            <pre class="code" data-src="encrypt" data-lang="javascript" data-focus="2"></pre>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">Consola</span><span>en vivo</span></div>
+              <div class="repl">
+                <div class="rl"><span class="pr" aria-hidden="true">›</span><span class="c-fn">encryptPassword</span><span class="c-pu">(</span><span class="c-str">"</span><input class="repl-input" id="epInput" type="text" value="Clave123" spellcheck="false" autocomplete="off" aria-label="Contraseña que recibe encryptPassword"><span class="c-str">"</span><span class="c-pu">)</span></div>
+                <div class="rl out"><span class="pr" aria-hidden="true">‹</span><span class="c-str" id="epOut"></span></div>
+                <div class="fp" id="epFp" aria-hidden="true"></div>
+                <div class="repl-meta"><span>SHA-1 · hexadecimal · <b id="epLen">40</b> caracteres</span><span class="chg-n" id="epChanged"></span></div>
+              </div>
+            </div>
+          </div>
+          <p class="footnote" data-anim>El hash se calcula en tu navegador con object-hash 3.0.0, la misma versión del proyecto.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · Paso 6 -->
+    <section class="slide" id="paso-6" data-emblem="cross" data-label="Paso 6 · verifyPassword" aria-roledescription="diapositiva" aria-label="Paso 6: Verifica una contraseña" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 6 de 9</span><span class="tag" data-tool="hash">hash</span></p>
+          <h2 class="title">Verifica una contraseña</h2>
+          <p class="lead" data-anim>Para saber si alguien escribió la contraseña correcta no comparas textos. Hasheas lo que escribió y lo comparas con el hash guardado.</p>
+          <ul class="points" data-anim>
+            <li>Si los dos hashes son iguales, la contraseña es correcta.</li>
+            <li>El sistema solo guarda el hash. La contraseña original nunca queda escrita.</li>
+            <li>La contraseña guardada en la consola es <code>Clave123</code>. Corrige la que está escrita hasta que coincida.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi" aria-hidden="true">JS</span>index.js</span></div>
+            </div>
+            <div class="ed-crumbs">encriptador › src › index.js › <b>verifyPassword</b></div>
+            <pre class="code" data-src="verify" data-lang="javascript" data-focus="2"></pre>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">Consola</span><span>en vivo</span></div>
+              <div class="repl">
+                <div class="rl"><span class="pr" aria-hidden="true">›</span><span class="c-kw">const</span> <span class="c-var">guardado</span> <span class="c-pu">=</span> <span class="c-fn">encryptPassword</span><span class="c-pu">(</span><span class="c-str">"Clave123"</span><span class="c-pu">)</span></div>
+                <div class="rl out"><span class="pr" aria-hidden="true">‹</span><span class="c-str" id="vpStored"></span></div>
+                <div class="rl"><span class="pr" aria-hidden="true">›</span><span class="c-fn">verifyPassword</span><span class="c-pu">(</span><span class="c-str">"</span><input class="repl-input" id="vpInput" type="text" value="clave123" spellcheck="false" autocomplete="off" aria-label="Contraseña que escribe el usuario"><span class="c-str">"</span><span class="c-pu">, </span><span class="c-var">guardado</span><span class="c-pu">)</span></div>
+                <div class="rl out"><span class="pr" aria-hidden="true">‹</span><span class="verdict" id="vpOut">false</span><span class="verdict-badge" id="vpBadge"></span></div>
+                <dl class="cmp"><dt>guardado</dt><dd id="vpA"></dd><dt>ingresado</dt><dd id="vpB"></dd></dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · Paso 7 -->
+    <section class="slide" id="paso-7" data-emblem="gear" data-label="Paso 7 · config.js" aria-roledescription="diapositiva" aria-label="Paso 7: Separa la configuración" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 7 de 9</span><span class="tag" data-tool="code">código</span><span class="tag">opcional</span></p>
+          <h2 class="title">Separa la configuración</h2>
+          <p class="lead" data-anim>Un archivo <code>config.js</code> reúne los valores que podrían cambiar, como el algoritmo del hash o una clave secreta, para que no queden repartidos por el código.</p>
+          <ul class="points" data-anim>
+            <li>Tus propios archivos se importan con ruta relativa y extensión: <code>'./config.js'</code>.</li>
+            <li>Las claves reales no se escriben en el código. Léelas de <code>process.env</code> y deja el archivo <code>.env</code> fuera de Git.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs" role="tablist" aria-label="Archivos abiertos">
+                <button class="ed-tab" role="tab" type="button" id="t7a" aria-selected="true" aria-controls="p7a"><span class="fi" aria-hidden="true">JS</span>config.js</button>
+                <button class="ed-tab" role="tab" type="button" id="t7b" aria-selected="false" aria-controls="p7b" tabindex="-1"><span class="fi" aria-hidden="true">JS</span>index.js</button>
+                <button class="ed-tab" role="tab" type="button" id="t7c" aria-selected="false" aria-controls="p7c" tabindex="-1"><span class="fi fi-env" aria-hidden="true">•</span>.env</button>
+              </div>
+            </div>
+            <div class="pane" id="p7a" role="tabpanel" aria-labelledby="t7a">
+              <div class="ed-crumbs">encriptador › src › <b>config.js</b></div>
+              <pre class="code" data-src="config" data-lang="javascript" data-focus="1,3"></pre>
+            </div>
+            <div class="pane" id="p7b" role="tabpanel" aria-labelledby="t7b" hidden>
+              <div class="ed-crumbs">encriptador › src › <b>index.js</b></div>
+              <pre class="code" data-src="config-index" data-lang="javascript" data-focus="2,5"></pre>
+            </div>
+            <div class="pane" id="p7c" role="tabpanel" aria-labelledby="t7c" hidden>
+              <div class="ed-crumbs">encriptador › <b>.env</b> · no se sube a Git</div>
+              <pre class="code" data-src="env" data-lang="ini" data-focus="1"></pre>
+            </div>
+          </div>
+          <p class="footnote" data-anim>Ejemplo propuesto: la guía describe este paso sin código. Ejecuta con <code>node --env-file=.env src/index.js</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · Paso 8 -->
+    <section class="slide" id="paso-8" data-emblem="array" data-label="Paso 8 · process.argv" aria-roledescription="diapositiva" aria-label="Paso 8: Lee los argumentos de la terminal" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 8 de 9</span><span class="tag" data-tool="code">código</span></p>
+          <h2 class="title">Lee los argumentos de la terminal</h2>
+          <p class="lead" data-anim><code>process.argv</code> es un array con todo lo que escribiste al ejecutar el programa. Las dos primeras posiciones son rutas; tus datos empiezan en la posición 2.</p>
+          <ul class="points" data-anim>
+            <li><code>slice(2)</code> descarta las dos rutas y deja solo tus datos en <code>args</code>.</li>
+            <li><code>args.slice(4)</code> junta en <code>friends</code> todo lo que sobre, sin importar cuántos nombres sean.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi" aria-hidden="true">JS</span>index.js</span></div>
+            </div>
+            <pre class="code" data-src="argv" data-lang="javascript" data-start="4" data-focus="5,8"></pre>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">process.argv</span><span>en vivo</span></div>
+              <label class="cmdline" for="argvInput"><span class="pr" aria-hidden="true">$</span><span class="fixed">node src/index.js</span><input id="argvInput" type="text" value="mauricio hombre colombia 30 ana luis" spellcheck="false" autocomplete="off"></label>
+              <div class="argv-head"><code id="argvName">process.argv</code><button class="mini-btn" id="sliceBtn" type="button" aria-pressed="false">Aplicar .slice(2)</button></div>
+              <ol class="cells" id="argvCells" aria-label="Elementos del array"></ol>
+              <pre class="persona-out" id="personaOut"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · Paso 8 (hashes) -->
+    <section class="slide" id="paso-8-hash" data-emblem="fingerprint" data-label="Paso 8 · Hashes" aria-roledescription="diapositiva" aria-label="Paso 8, continuación: Hashea a la persona" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 8 · continuación</span><span class="tag" data-tool="hash">hash</span></p>
+          <h2 class="title">Hashea a la persona y muestra el resultado</h2>
+          <p class="lead" data-anim>Con el objeto listo calculas tres hashes y los imprimes. Pasa el cursor por una línea del código para ver qué imprime.</p>
+          <div class="table-wrap" data-anim>
+            <table class="htable">
+              <thead><tr><th scope="col">Variable</th><th scope="col">Algoritmo</th><th scope="col">Formato</th><th scope="col">Largo</th></tr></thead>
+              <tbody>
+                <tr><td><code>personaEncrypted</code></td><td>SHA-1</td><td>hex</td><td>40</td></tr>
+                <tr><td><code>personaNameEncrypted</code></td><td>SHA-1</td><td>hex</td><td>40</td></tr>
+                <tr><td><code>personaMD5Encrypted</code></td><td>MD5</td><td>base64</td><td>24</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi" aria-hidden="true">JS</span>index.js</span></div>
+            </div>
+            <div class="ed-crumbs">encriptador › src › index.js · <b>comentarios plegados</b></div>
+            <pre class="code" data-src="hashes" data-lang="javascript" data-nums="11,14,17,19,22,25,28" data-focus="14,17,19" data-links="11:o1,14:o2,17:o3,19:o4,22:o2,25:o3,28:o4"></pre>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">Terminal</span></div>
+              <div class="term" data-term="run"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 · Paso 9 -->
+    <section class="slide" id="paso-9" data-emblem="play" data-label="Paso 9 · npm start" aria-roledescription="diapositiva" aria-label="Paso 9: Crea el script de inicio" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Paso 9 de 9</span><span class="tag" data-tool="npm">npm</span></p>
+          <h2 class="title">Crea el script de inicio</h2>
+          <p class="lead" data-anim>En <code>scripts</code> de package.json defines atajos. Con <code>start</code> ya no escribes la ruta del archivo: ejecutas <code>npm start</code> y pones los datos después de <code>--</code>.</p>
+          <ul class="points" data-anim>
+            <li><code>npm start</code> es un atajo de <code>npm run start</code>. Los demás scripts siempre llevan <code>run</code>, como <code>npm run dev</code>.</li>
+            <li>Separa los datos con espacios. Si escribes <code>mauricio, hombre,</code> las comas quedan dentro de los valores.</li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi fi-json" aria-hidden="true">{}</span>package.json</span></div>
+            </div>
+            <pre class="code" data-src="pkg-scripts" data-lang="json" data-start="13" data-focus="15-18"></pre>
+            <div class="ed-panel">
+              <div class="panel-tabs"><span class="is-active">Terminal</span></div>
+              <div class="term" data-term="start"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · Terminal en vivo -->
+    <section class="slide" id="terminal" data-label="Pruébalo" aria-roledescription="diapositiva" aria-label="Pruébalo: ejecuta el encriptador" hidden>
+      <div class="slide-inner stack">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Pruébalo</span><span class="tag" data-tool="term">terminal simulada</span></p>
+          <h2 class="title">Ejecuta el encriptador</h2>
+          <p class="lead" data-anim>Escribe un comando y presiona Enter. Los hashes son reales: los calcula object-hash 3.0.0 en tu navegador y coinciden con los de Node.</p>
+        </div>
+        <div class="work">
+          <div class="chips" data-anim>
+            <button class="chip" type="button" data-cmd="npm start -- ana mujer peru 25 luis">npm start -- ana mujer peru 25 luis</button>
+            <button class="chip" type="button" data-cmd="npm start">npm start <span>sin datos</span></button>
+            <button class="chip" type="button" data-cmd="npm start -- mauricio, hombre, colombia">npm start -- mauricio, hombre, colombia <span>con comas</span></button>
+            <button class="chip" type="button" data-cmd='npm start -- "Juan Pablo" hombre colombia 30'>npm start -- "Juan Pablo" hombre colombia 30 <span>con comillas</span></button>
+            <button class="chip" type="button" data-cmd="clear">clear</button>
+          </div>
+          <div class="editor" data-anim>
+            <div class="ed-bar"><span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="ed-title">encriptador — zsh</span><span class="ed-badge">simulada</span></div>
+            <div class="term live" id="liveTerm">
+              <div id="liveLog"></div>
+              <div class="live-row"><span class="pr" aria-hidden="true">~/encriptador $</span><input id="liveInput" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Escribe un comando para la terminal simulada"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · Cierre -->
+    <section class="slide" id="cierre" data-emblem="lock" data-label="Cierre" aria-roledescription="diapositiva" aria-label="Cierre: un hash no es cifrado" hidden>
+      <div class="slide-inner">
+        <div class="copy">
+          <p class="eyebrow" data-anim><span class="scr">Cierre</span></p>
+          <h2 class="title">Un hash no es cifrado</h2>
+          <p class="lead" data-anim>object-hash calcula huellas: sirven para comparar datos, no para esconderlos. Cifrar es reversible con una clave; un hash no se puede revertir.</p>
+          <ul class="points" data-anim>
+            <li>MD5 y SHA-1 son rápidos, y para contraseñas eso es un problema: un atacante puede probar miles de millones por segundo.</li>
+            <li>bcrypt agrega una sal aleatoria y es lento a propósito. Es la opción para guardar contraseñas reales.</li>
+          </ul>
+          <span class="sublabel" data-anim>Lo que usaste hoy</span>
+          <ul class="recap" data-anim>
+            <li><code>node -v</code></li><li><code>npm init</code></li><li><code>npm i object-hash</code></li><li><code>import hash</code></li><li><code>process.argv</code></li><li><code>npm start</code></li>
+          </ul>
+          <div class="viz" aria-hidden="true"></div>
+        </div>
+        <div class="work">
+          <div class="editor" data-anim>
+            <div class="ed-bar">
+              <span class="ed-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <div class="ed-tabs"><span class="ed-tab is-active"><span class="fi" aria-hidden="true">JS</span>contraseñas.js</span></div>
+            </div>
+            <div class="ed-crumbs">siguiente paso · <b>bcrypt</b></div>
+            <pre class="code" data-src="bcrypt" data-lang="javascript" data-focus="4,6-7"></pre>
+          </div>
+          <div class="reto" data-anim>
+            <span class="sublabel">Reto</span>
+            <p><strong>Valida antes de hashear.</strong> Si llegan menos de 4 datos, imprime cómo usar el comando y termina con <code>process.exit(1)</code> antes de llamar a <code>hash</code>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="statusbar">
+    <span class="progress" id="progress" aria-hidden="true"></span>
+    <div class="st-left">
+      <span class="st-item"><i class="st-dot" aria-hidden="true"></i>node v24.18.0</span>
+      <span class="st-item">npm 12.0.2</span>
+      <span class="st-item">ESM</span>
+      <span class="st-item">UTF-8</span>
+    </div>
+    <div class="st-keys" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> navegar <span class="sep">·</span> <kbd>H</kbd> pista <span class="sep">·</span> <kbd>T</kbd> tema</div>
+    <div class="st-nav">
+      <button class="nav-btn" id="prevBtn" type="button" aria-label="Diapositiva anterior"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg></button>
+      <span class="counter" id="counter" aria-hidden="true"><b>01</b> / 14</span>
+      <button class="nav-btn" id="nextBtn" type="button" aria-label="Diapositiva siguiente"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+    </div>
+  </footer>
+
+  <div class="buddy">
+    <div class="bubble" id="bubble" role="status" hidden>
+      <div class="bubble-head">
+        <span>Hashi</span><span class="bubble-count" id="bubbleCount"></span>
+        <button class="bubble-close" id="bubbleClose" type="button" aria-label="Cerrar la pista"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+      </div>
+      <p class="bubble-text" id="bubbleText"></p>
+      <button class="bubble-next" id="bubbleNext" type="button">Otra pista <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+    </div>
+    <button class="hashi" id="hashiBtn" type="button" aria-label="Hashi: pedir una pista sobre esta diapositiva" title="Pedir una pista (H)">
+      <canvas id="hashiCanvas" aria-hidden="true"></canvas>
+      <svg class="hashi-fallback" id="hashiFallback" viewBox="0 0 120 120" aria-hidden="true" hidden>
+        <rect class="hf-rim" x="22" y="30" width="76" height="66" rx="16"/>
+        <rect class="hf-screen" x="26" y="34" width="68" height="58" rx="12"/>
+        <rect class="hf-bar" x="26" y="34" width="68" height="12" rx="6"/>
+        <rect class="hf-face" x="42" y="56" width="8" height="13" rx="4"/>
+        <rect class="hf-face" x="70" y="56" width="8" height="13" rx="4"/>
+        <path class="hf-smile" d="M52 77q8 7 16 0"/>
+      </svg>
+      <span class="hashi-badge" id="hashiBadge" aria-hidden="true">?</span>
+    </button>
+  </div>
+</div>
+<div class="sr-only" id="announcer" aria-live="polite"></div>
+
+<!-- Fragmentos de código: el texto se copia tal cual del proyecto -->
+<script type="text/plain" data-snippet="pkg-init">
+{
+  "name": "encriptador",
+  "version": "1.0.0",
+  "description": "una aplicacion node para encriptar objetos y datos",
+  "keywords": [
+    "encrypt",
+    "data",
+    "objects",
+    "security"
+  ],
+  "license": "MIT",
+  "author": "@mauriciorivero",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
+</script>
+<script type="text/plain" data-snippet="esm-index">
+//se importa el modulo usando ES6
+import hash from 'object-hash';
+</script>
+<script type="text/plain" data-snippet="encrypt">
+function encryptPassword(password) {
+  return hash(password);
+}
+</script>
+<script type="text/plain" data-snippet="verify">
+function verifyPassword(inputPassword, hashedPassword) {
+  return hash(inputPassword) === hashedPassword;
+}
+</script>
+<script type="text/plain" data-snippet="config">
+export const config = {
+  appName: 'encriptador',
+  hashOptions: { algorithm: 'md5', encoding: 'base64' },
+  secret: process.env.APP_SECRET,
+};
+</script>
+<script type="text/plain" data-snippet="config-index">
+import hash from 'object-hash';
+import { config } from './config.js';
+
+// …
+const personaMD5Encrypted = hash(persona, config.hashOptions);
+</script>
+<script type="text/plain" data-snippet="env">
+APP_SECRET=una-clave-larga-y-privada
+</script>
+<script type="text/plain" data-snippet="argv">
+//cuando inicie el programa puedo usar el comando npm run start mauricio, hombre, colombia
+const args = process.argv.slice(2);
+
+//se declara un objeto persona con propiedades name, stapler y friends
+const persona = { name: args[0], genre: args[1], nationality: args[2], age: args[3], friends: args.slice(4) };
+</script>
+<script type="text/plain" data-snippet="hashes">
+console.log(`Persona: ${JSON.stringify(persona)}`);
+const personaEncrypted = hash(persona);
+const personaNameEncrypted = hash(persona.name);
+const personaMD5Encrypted = hash(persona, { algorithm: 'md5', encoding: 'base64' });
+console.log(`Persona encriptada: ${personaEncrypted}`);
+console.log(`Nombre encriptado: ${personaNameEncrypted}`);
+console.log(`Persona encriptada con MD5 y codificada en base64: ${personaMD5Encrypted}`);
+</script>
+<script type="text/plain" data-snippet="pkg-scripts">
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "object-hash": "^3.0.0"
+  }
+}
+</script>
+<script type="text/plain" data-snippet="bcrypt">
+// npm i bcrypt
+import bcrypt from 'bcrypt';
+
+const guardado = await bcrypt.hash('Clave123', 10);
+
+await bcrypt.compare('Clave123', guardado); // true
+await bcrypt.compare('clave123', guardado); // false
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/object-hash@3.0.0/dist/object_hash.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

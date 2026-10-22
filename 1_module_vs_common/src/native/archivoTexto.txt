@@ -1,0 +1,1 @@
+Este es un archivo de texto de ejemplo. Contiene varias líneas de texto para demostrar cómo se puede leer y escribir en un archivo utilizando diferentes lenguajes de programación. Puedes agregar más contenido a este archivo según sea necesario para tus pruebas o proyectos. Es para la ficha del tecnologo de programación de software del SENA

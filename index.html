@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clases de Node.js · SENA 2026</title>
+<meta name="description" content="Clases prácticas de Node.js del SENA: presentaciones interactivas paso a paso y el código de cada proyecto.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta property="og:title" content="Clases de Node.js · SENA 2026">
+<meta property="og:description" content="Presentaciones interactivas paso a paso y el código de cada proyecto.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0b'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' text-anchor='middle' fill='%233b9eff'%3E%26lt;/%26gt;%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/landing.css">
+<script src="assets/theme-init.js"></script>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+
+<div class="page">
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="#top" aria-label="Clases de Node.js, ir al inicio">
+        <span class="brand__logo" aria-hidden="true">&lt;/&gt;</span>
+        <span class="brand__name">node</span><span class="brand__sep">/</span><span class="brand__sub">clases</span>
+      </a>
+      <div class="topbar__actions">
+        <a class="icon-btn" id="repoLink" data-repo href="#" target="_blank" rel="noopener noreferrer" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          <span>Repositorio</span>
+        </a>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema (T)">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero" aria-labelledby="titulo">
+      <div class="hero__copy">
+        <p class="eyebrow rise" style="--d:0">SENA · Node.js · 2026</p>
+        <h1 id="titulo" class="rise" style="--d:1">Aprende <span class="grad">Node.js</span> paso a paso</h1>
+        <p class="lead rise" style="--d:2">Clases prácticas para aprender Node.js construyendo proyectos reales. Cada clase trae una <b>presentación interactiva</b> que te guía en cada paso y el <b>código</b> terminado del ejemplo.</p>
+        <div class="cta rise" style="--d:3">
+          <a class="btn" href="#clases">Ver las clases
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </a>
+          <a class="btn btn--ghost" data-repo href="#" target="_blank" rel="noopener noreferrer" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+            Ver el repositorio
+          </a>
+        </div>
+        <ul class="pills rise" style="--d:4" aria-label="Temas">
+          <li>módulos</li><li>npm</li><li>fs</li><li>gRPC</li>
+        </ul>
+        <p class="hint rise" style="--d:5"><b id="statClasses">6</b> clases · <b id="statSlides">98</b> diapositivas · código de cada ejemplo</p>
+      </div>
+
+      <div class="hero__art rise" style="--d:3">
+        <div class="bubble" id="bubble" role="status" aria-live="polite">¡Hola! Elige una clase y empezamos.</div>
+        <button class="avatar-btn" id="avatarBtn" type="button" aria-label="Saludar al robot">
+          <span class="avatar" id="avatar" data-mood="happy">
+            <svg viewBox="0 0 200 210" aria-hidden="true">
+              <ellipse cx="100" cy="196" rx="48" ry="7" fill="#000" opacity=".5"/>
+              <line x1="100" y1="32" x2="100" y2="14" stroke="#3a3a42" stroke-width="3" stroke-linecap="round"/>
+              <circle class="tip" cx="100" cy="11" r="6" fill="#ff6bb5"/>
+              <text class="brL" x="6" y="108" font-family="Geist Mono,monospace" font-size="46" font-weight="600" fill="#3b9eff">{</text>
+              <text class="brR" x="160" y="108" font-family="Geist Mono,monospace" font-size="46" font-weight="600" fill="#3b9eff">}</text>
+              <rect x="62" y="150" width="76" height="34" rx="12" fill="#17171a" stroke="#34343b" stroke-width="2"/>
+              <text x="100" y="174" text-anchor="middle" font-family="Geist Mono,monospace" font-size="18" font-weight="600" fill="#50e3c2">&lt;/&gt;</text>
+              <rect x="28" y="30" width="144" height="126" rx="38" fill="#16161a" stroke="#3a3a42" stroke-width="2.5"/>
+              <rect x="40" y="42" width="120" height="102" rx="28" fill="#0a0a0c"/>
+              <g id="eyes">
+                <ellipse class="eye" cx="76" cy="86" rx="9" ry="12.5" fill="#50e3c2"/>
+                <ellipse class="eye" cx="124" cy="86" rx="9" ry="12.5" fill="#50e3c2"/>
+                <circle cx="79" cy="81" r="3.2" fill="#fff"/><circle cx="127" cy="81" r="3.2" fill="#fff"/>
+              </g>
+              <g class="happy" fill="none" stroke="#50e3c2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M65 92 Q76 74 87 92"/><path d="M113 92 Q124 74 135 92"/>
+              </g>
+              <ellipse cx="58" cy="112" rx="9" ry="5.5" fill="#ff6bb5" opacity=".5"/>
+              <ellipse cx="142" cy="112" rx="9" ry="5.5" fill="#ff6bb5" opacity=".5"/>
+              <path d="M90 110 Q100 122 110 110" fill="none" stroke="#50e3c2" stroke-width="4.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="wrap classes" id="clases" aria-labelledby="clases-titulo">
+      <header class="section-head">
+        <p class="eyebrow">Material del curso</p>
+        <h2 id="clases-titulo">Elige una clase</h2>
+        <p class="lead">Abre la presentación para seguir el paso a paso, o ve directo al código del proyecto.</p>
+      </header>
+
+      <ol class="grid" role="list">
+
+        <!-- Para agregar una clase nueva: copia un <li>, cambia carpeta, textos, colores y data-slides. -->
+
+        <li>
+          <article class="card reveal" style="--accent:#3b9eff;--accent-l:#0068d6" data-slides="11">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi sh">&gt;_</span>terminal</span></div>
+              <pre class="code"><code><span class="ps">$</span>node src/index.js <span class="nu">1</span> <span class="nu">10</span>
+<span class="out">número aleatorio generado entre 1 y 10: 7</span></code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 0</span><span class="dot"></span><span>11 diapositivas</span></p>
+              <h3 class="card__title">Tu primer programa en Node.js</h3>
+              <p class="card__desc">De una carpeta vacía a un generador de números aleatorios que lee argumentos desde la terminal.</p>
+              <ul class="tags"><li>mkdir</li><li>git</li><li>npm</li><li>process.argv</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="0_Primer_Programa/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 0: Tu primer programa en Node.js</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="0_Primer_Programa" href="0_Primer_Programa/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 0</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#3fcf8e;--accent-l:#0f7a40" data-slides="14">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi">JS</span>require vs import</span></div>
+              <pre class="code"><code><span class="kw">const</span> math = <span class="fn">require</span>(<span class="st">'./math'</span>);
+<span class="kw">import</span> { add } <span class="kw">from</span> <span class="st">'./math.mjs'</span>;
+<span class="kw">import</span> isOdd <span class="kw">from</span> <span class="st">'is-odd'</span>;</code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 1</span><span class="dot"></span><span>14 diapositivas</span></p>
+              <h3 class="card__title">Módulos en Node.js</h3>
+              <p class="card__desc">Un proyecto, cuatro formas de traer código: CommonJS, ES Modules, módulos nativos y paquetes externos.</p>
+              <ul class="tags"><li>require</li><li>import</li><li>fs</li><li>npm i</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="1_module_vs_common/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 1: Módulos en Node.js</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="1_module_vs_common" href="1_module_vs_common/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 1</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#f5a524;--accent-l:#9a5b00" data-slides="14">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi">JS</span>src/index.js</span></div>
+              <pre class="code"><code><span class="kw">import</span> hash <span class="kw">from</span> <span class="st">'object-hash'</span>;
+
+<span class="kw">const</span> personaEncrypted = <span class="fn">hash</span>(persona);</code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 2</span><span class="dot"></span><span>14 diapositivas</span></p>
+              <h3 class="card__title">Encriptador con npm</h3>
+              <p class="card__desc">Instala object-hash, genera hashes de contraseñas y objetos, y lee los datos desde la terminal.</p>
+              <ul class="tags"><li>npm init</li><li>object-hash</li><li>npm start</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="2_npm/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 2: Encriptador con npm</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="2_npm" href="2_npm/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 2</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#bf7af0;--accent-l:#8e4ec6" data-slides="17">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi sh">&gt;_</span>terminal</span></div>
+              <pre class="code"><code><span class="ps">$</span>npm link
+<span class="ps">$</span>npm publish <span class="nu">--dry-run</span>
+<span class="ps">$</span>npm publish</code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 3</span><span class="dot"></span><span>17 diapositivas</span></p>
+              <h3 class="card__title">Publica tu paquete en npm</h3>
+              <p class="card__desc">Crea sena-date, pruébalo en local con npm link y publícalo en npm en catorce pasos.</p>
+              <ul class="tags"><li>npm link</li><li>README.md</li><li>npm publish</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="3_publicar_paquete_npm/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 3: Publica tu paquete en npm</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="3_publicar_paquete_npm" href="3_publicar_paquete_npm/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 3</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#ff6bb5;--accent-l:#d6336c" data-slides="16">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi">JS</span>src/fs.js</span></div>
+              <pre class="code"><code><span class="kw">const</span> fs = <span class="fn">require</span>(<span class="st">'fs'</span>);
+<span class="kw">const</span> fileName = <span class="st">'ejemplo.txt'</span>;
+<span class="kw">const</span> content = fs.<span class="fn">readFileSync</span>(fileName, <span class="st">'utf-8'</span>);</code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 4</span><span class="dot"></span><span>16 diapositivas</span></p>
+              <h3 class="card__title">Archivos con Node.js</h3>
+              <p class="card__desc">Crea, lee, actualiza y borra archivos con el módulo nativo fs, y resuelve dos retos.</p>
+              <ul class="tags"><li>writeFileSync</li><li>readFileSync</li><li>unlinkSync</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="4_crear_leer_archivos/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 4: Archivos con Node.js</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="4_crear_leer_archivos" href="4_crear_leer_archivos/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 4</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#50e3c2;--accent-l:#0b7a66" data-slides="26">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi">JS</span>src/transcriptOpenAI.js</span></div>
+              <pre class="code"><code><span class="kw">const</span> grpc = <span class="fn">require</span>(<span class="st">'@grpc/grpc-js'</span>);
+<span class="kw">const</span> NVIDIA_SERVER = <span class="st">'grpc.nvcf.nvidia.com:443'</span>;
+<span class="ps">$</span>node src/transcriptOpenAI.js</code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 5</span><span class="dot"></span><span>26 diapositivas</span></p>
+              <h3 class="card__title">Transcribe audio con Node.js</h3>
+              <p class="card__desc">Envía un audio a Whisper de NVIDIA por gRPC y guarda la transcripción en un archivo de texto.</p>
+              <ul class="tags"><li>gRPC</li><li>.proto</li><li>.env</li><li>Whisper</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="5_leer_archivos_audio/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 5: Transcribe audio con Node.js</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="5_leer_archivos_audio" href="5_leer_archivos_audio/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 5</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+      </ol>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__in">
+      <p>SENA · Tecnólogo en Análisis y Desarrollo de Software · Ficha 3406211</p>
+      <p>Pulsa <kbd>T</kbd> para cambiar el tema</p>
+    </div>
+  </footer>
+</div>
+
+<script src="assets/landing.js"></script>
+</body>
+</html>

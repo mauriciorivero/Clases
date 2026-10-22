@@ -1,0 +1,9 @@
+# Dependencias instaladas con npm
+node_modules/
+
+# Variables de entorno y credenciales (p. ej. NVIDIA_API_KEY en 5_leer_archivos_audio/.env)
+.env
+.env.*
+
+# Archivos del sistema
+.DS_Store

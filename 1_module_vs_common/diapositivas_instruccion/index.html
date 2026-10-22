@@ -1,0 +1,586 @@
+<title>Módulos en Node.js</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+
+<div id="field" aria-hidden="true"><canvas id="gl"></canvas></div>
+
+<div id="stage">
+  <main id="deck" aria-live="polite">
+
+    <!-- 1 · portada -->
+    <section class="slide" data-accent="nat" aria-label="Portada">
+      <div class="slide-inner hero">
+        <p class="kicker">SENA · Tecnólogo en Análisis y Desarrollo de Software · Ficha 3406211</p>
+        <h1>Cómo armar el proyecto de <em>módulos</em> en Node.js</h1>
+        <p class="lead">Ocho pasos para construir, desde cero, un proyecto que compara los cuatro tipos de módulos que existen en Node.js: <strong>CommonJS</strong>, <strong>ES Modules</strong>, <strong>nativos</strong> y <strong>externos</strong>.</p>
+        <div class="chips">
+          <span style="--h:var(--c-cjs)">CommonJS</span>
+          <span style="--h:var(--c-esm)">ES Modules</span>
+          <span style="--h:var(--c-nat)">Nativos</span>
+          <span style="--h:var(--c-ext)">Externos</span>
+        </div>
+        <p class="hint">Avanza con <kbd>&rarr;</kbd> o <kbd>espacio</kbd> · regresa con <kbd>&larr;</kbd> · salta con los puntos de abajo</p>
+      </div>
+    </section>
+
+    <!-- 2 · panorama -->
+    <section class="slide" data-accent="neu" data-diagram="overview" aria-label="Qué vamos a construir" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">00</span><span class="sep"></span>Panorama</p>
+        <h2>Un proyecto, cuatro formas de traer código</h2>
+        <p class="lead">Todo módulo responde a la misma pregunta: <strong>¿cómo uso código que vive en otro archivo?</strong> Node.js ofrece cuatro respuestas, y vamos a escribir las cuatro.</p>
+        <div class="grid4">
+          <div class="pill" style="--h:var(--c-cjs)"><span class="tag">Propio</span><span class="ttl">require()</span><span class="sub">El sistema histórico de Node.js. Síncrono y por defecto.</span></div>
+          <div class="pill" style="--h:var(--c-esm)"><span class="tag">Propio</span><span class="ttl">import</span><span class="sub">El estándar oficial de JavaScript. Archivos <code>.mjs</code>.</span></div>
+          <div class="pill" style="--h:var(--c-nat)"><span class="tag">Incluido</span><span class="ttl">fs, path, http</span><span class="sub">Vienen con Node.js. Cero instalación.</span></div>
+          <div class="pill" style="--h:var(--c-ext)"><span class="tag">De terceros</span><span class="ttl">npm install</span><span class="sub">Código de la comunidad, en <code>node_modules/</code>.</span></div>
+        </div>
+        <div class="diagram" data-diagram="overview"></div>
+        <p class="sr">Diagrama: Node.js en el centro conectado a cuatro tipos de módulos — CommonJS, ES Modules, nativos y externos.</p>
+      </div>
+    </section>
+
+    <!-- 3 · npm init -->
+    <section class="slide" data-accent="neu" aria-label="Paso 1: inicializar el proyecto" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">01</span><span class="sep"></span>Inicializar</p>
+        <h2>Crea el proyecto con <code>npm init</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="term">
+              <div class="term-bar">Terminal</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">mkdir 1_module_vs_common &amp;&amp; cd 1_module_vs_common</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">npm init -y</span></div>
+                <div><span class="out">Wrote to .../package.json</span></div>
+              </div>
+            </div>
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>package.json</span></div>
+                <div class="bar-note">la identidad del proyecto</div>
+              </div>
+              <div class="code-body">
+                <div class="cl"><span class="cc"><span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="pr">"name"</span><span class="p">:</span> <span class="s">"1_module_vs_common"</span><span class="p">,</span></span></div>
+                <div class="cl"><span class="cc">  <span class="pr">"version"</span><span class="p">:</span> <span class="s">"1.0.0"</span><span class="p">,</span></span></div>
+                <div class="cl"><span class="cc">  <span class="pr">"main"</span><span class="p">:</span> <span class="s">"index.js"</span><span class="p">,</span></span></div>
+                <div class="cl hl"><span class="cc">  <span class="pr">"type"</span><span class="p">:</span> <span class="s">"commonjs"</span><span class="p">,</span></span></div>
+                <div class="cl"><span class="cc">  <span class="pr">"dependencies"</span><span class="p">:</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">    <span class="pr">"is-odd"</span><span class="p">:</span> <span class="s">"^3.0.1"</span></span></div>
+                <div class="cl"><span class="cc">  <span class="p">}</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+              </div>
+            </div>
+          </div>
+          <ul class="notes">
+            <li><span class="mk">1</span><span><b>El flag <code>-y</code></b> acepta todas las respuestas por defecto. Sin él, npm te pregunta una por una.</span></li>
+            <li><span class="mk">2</span><span><b>La línea clave es <code>"type"</code>.</b> Con <code>"commonjs"</code>, Node.js lee cada <code>.js</code> como CommonJS. Si fuera <code>"module"</code>, los leería como ES Modules.</span></li>
+            <li><span class="mk">3</span><span><b>Por eso usaremos <code>.mjs</code></b> para los ES Modules: así conviven los dos sistemas en el mismo proyecto sin pelear.</span></li>
+            <li><span class="mk">4</span><span><b><code>dependencies</code></b> aparecerá sola cuando instalemos el paquete externo en el paso 8.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · estructura -->
+    <section class="slide" data-accent="neu" data-diagram="tree" aria-label="Paso 2: estructura de carpetas" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">02</span><span class="sep"></span>Estructura</p>
+        <h2>Una carpeta por sistema de módulos</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="term">
+              <div class="term-bar">Terminal</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">mkdir -p src/commonJS src/esModulesJS</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">mkdir -p src/native src/externalModule</span></div>
+              </div>
+            </div>
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>estructura del proyecto</span></div>
+              </div>
+              <div class="code-body">
+                <div class="cl"><span class="cc"><span class="b">1_module_vs_common/</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">├──</span> package.json</span></div>
+                <div class="cl"><span class="cc"><span class="p">└──</span> <span class="b">src/</span></span></div>
+                <div class="cl"><span class="cc">    <span class="p">├──</span> <span class="b">commonJS/</span>       <span class="c">// require</span></span></div>
+                <div class="cl"><span class="cc">    <span class="p">├──</span> <span class="b">esModulesJS/</span>    <span class="c">// import</span></span></div>
+                <div class="cl"><span class="cc">    <span class="p">├──</span> <span class="b">native/</span>         <span class="c">// fs, path…</span></span></div>
+                <div class="cl"><span class="cc">    <span class="p">└──</span> <span class="b">externalModule/</span> <span class="c">// npm</span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="notes">
+              <li><span class="mk">·</span><span><b>Separar por carpeta no es decoración.</b> Cada una queda como un experimento aislado que puedes ejecutar y romper sin afectar a los demás.</span></li>
+              <li><span class="mk">·</span><span><b>Dentro de <code>commonJS/</code> y <code>esModulesJS/</code></b> repetiremos a propósito las mismas cuatro funciones matemáticas. Así la única diferencia visible será la sintaxis de los módulos.</span></li>
+              <li><span class="mk">·</span><span><b>El nombre de la carpeta no cambia nada</b> para Node.js. Lo que decide el comportamiento es la extensión del archivo y el <code>"type"</code> del <code>package.json</code>.</span></li>
+            </ul>
+            <div class="diagram" data-diagram="tree"></div>
+            <p class="sr">Diagrama: la carpeta src se ramifica en commonJS, esModulesJS, native y externalModule.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · CJS export -->
+    <section class="slide" data-accent="cjs" data-diagram="cjs-export" aria-label="Paso 3: exportar con CommonJS" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">03</span><span class="sep"></span>CommonJS · exportar</p>
+        <h2>Publica funciones con <code>module.exports</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/commonJS/math.js</span></div>
+                <div class="bar-note">el módulo que ofrece el servicio</div>
+              </div>
+              <div class="code-body">
+                <div class="cl"><span class="cc"><span class="k">function</span> <span class="f">add</span><span class="p">(</span>a<span class="p">,</span> b<span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">return</span> a <span class="o">+</span> b<span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc"><span class="k">function</span> <span class="f">divide</span><span class="p">(</span>a<span class="p">,</span> b<span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">if</span> <span class="p">(</span>b <span class="o">===</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">    <span class="k">throw new</span> <span class="f">Error</span><span class="p">(</span><span class="s">"Cannot divide by zero"</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc">  <span class="p">}</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">return</span> a <span class="o">/</span> b<span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl hl"><span class="cc"><span class="b">module</span><span class="p">.</span><span class="pr">exports</span> <span class="o">=</span> <span class="p">{</span> add<span class="p">,</span> substract<span class="p">,</span> multiply<span class="p">,</span> divide <span class="p">}</span><span class="p">;</span></span></div>
+              </div>
+            </div>
+            <div class="diagram" data-diagram="cjs-export"></div>
+            <p class="sr">Diagrama: las funciones pasan por module.exports y quedan disponibles para otros archivos.</p>
+          </div>
+          <ul class="notes">
+            <li><span class="mk">1</span><span><b>Declarar no es exportar.</b> Mientras una función no entre en <code>module.exports</code>, nadie afuera puede verla. Ese es el encapsulamiento del módulo.</span></li>
+            <li><span class="mk">2</span><span><b><code>module.exports</code> es un objeto normal.</b> Aquí lo reemplazamos por uno nuevo con las cuatro funciones adentro.</span></li>
+            <li><span class="mk">3</span><span><b>Siempre al final del archivo.</b> Es la convención: primero se define, después se publica.</span></li>
+            <li><span class="mk">4</span><span><b>Validar antes de operar.</b> <code>divide</code> lanza un <code>Error</code> si el divisor es cero, en vez de devolver <code>Infinity</code> en silencio.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · CJS require -->
+    <section class="slide" data-accent="cjs" data-diagram="cjs-require" aria-label="Paso 4: importar con require" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">04</span><span class="sep"></span>CommonJS · importar</p>
+        <h2>Consume el módulo con <code>require()</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/commonJS/main.js</span></div>
+                <div class="bar-note">quien consume el servicio</div>
+              </div>
+              <div class="code-body">
+                <div class="cl hl"><span class="cc"><span class="k">const</span> math <span class="o">=</span> <span class="f">require</span><span class="p">(</span><span class="s">'./math'</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span>math<span class="p">.</span><span class="f">add</span><span class="p">(</span><span class="n">5</span><span class="p">,</span> <span class="n">3</span><span class="p">))</span><span class="p">;</span>      <span class="c">// 8</span></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span>math<span class="p">.</span><span class="f">multiply</span><span class="p">(</span><span class="n">6</span><span class="p">,</span> <span class="n">7</span><span class="p">))</span><span class="p">;</span> <span class="c">// 42</span></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span>math<span class="p">.</span><span class="f">divide</span><span class="p">(</span><span class="n">20</span><span class="p">,</span> <span class="n">5</span><span class="p">))</span><span class="p">;</span>   <span class="c">// 4</span></span></div>
+              </div>
+            </div>
+            <div class="term">
+              <div class="term-bar">Terminal · desde la raíz del proyecto</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">node src/commonJS/main.js</span></div>
+                <div><span class="out">8</span></div>
+                <div><span class="out">42</span></div>
+                <div><span class="out">4</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="notes">
+              <li><span class="mk">1</span><span><b><code>'./math'</code> sin extensión.</b> Node.js prueba <code>math.js</code>, luego <code>math.json</code>, luego <code>math/index.js</code>.</span></li>
+              <li><span class="mk">2</span><span><b>El <code>./</code> es obligatorio.</b> Sin él, Node.js buscaría un paquete llamado <code>math</code> en <code>node_modules/</code>, no tu archivo.</span></li>
+              <li><span class="mk">3</span><span><b><code>require()</code> devuelve el objeto</b> que el otro archivo puso en <code>module.exports</code>. De ahí el prefijo <code>math.</code> en cada llamada.</span></li>
+              <li><span class="mk">4</span><span><b>Es síncrono.</b> La línea 1 no termina hasta que <code>math.js</code> se ejecutó completo.</span></li>
+            </ul>
+            <div class="diagram" data-diagram="cjs-require"></div>
+            <p class="sr">Diagrama: main.js pide math.js con require y recibe de vuelta el objeto exportado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · ESM export -->
+    <section class="slide" data-accent="esm" data-diagram="esm-export" aria-label="Paso 5: exportar con ES Modules" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">05</span><span class="sep"></span>ES Modules · exportar</p>
+        <h2>La misma lógica con <code>export</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/esModulesJS/math.mjs</span></div>
+                <div class="bar-note">fíjate en la extensión</div>
+              </div>
+              <div class="code-body">
+                <div class="cl hl"><span class="cc"><span class="k">export function</span> <span class="f">add</span><span class="p">(</span>x<span class="p">,</span> y<span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">return</span> x <span class="o">+</span> y<span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl hl"><span class="cc"><span class="k">export function</span> <span class="f">divide</span><span class="p">(</span>x<span class="p">,</span> y<span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">if</span> <span class="p">(</span>y <span class="o">===</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">    <span class="k">throw new</span> <span class="f">Error</span><span class="p">(</span><span class="s">"Cannot divide by zero"</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc">  <span class="p">}</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">return</span> x <span class="o">/</span> y<span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+              </div>
+            </div>
+            <div class="diagram" data-diagram="esm-export"></div>
+            <p class="sr">Diagrama: cada función de math.mjs sale marcada individualmente con export.</p>
+          </div>
+          <ul class="notes">
+            <li><span class="mk">1</span><span><b>No hay línea final.</b> En vez de juntar todo en un objeto, cada función se marca como pública donde se declara.</span></li>
+            <li><span class="mk">2</span><span><b>La extensión <code>.mjs</code> es la señal.</b> Como el <code>package.json</code> dice <code>"commonjs"</code>, esta extensión le avisa a Node.js que este archivo sí es un ES Module.</span></li>
+            <li><span class="mk">3</span><span><b>Son <i>named exports</i></b> (exportaciones nombradas). Quien importe tendrá que usar exactamente estos nombres.</span></li>
+            <li><span class="mk">4</span><span><b>La lógica es idéntica</b> a la de <code>math.js</code>. Lo único que cambió es cómo se publica.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · ESM import -->
+    <section class="slide" data-accent="esm" data-diagram="esm-import" aria-label="Paso 6: importar con import" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">06</span><span class="sep"></span>ES Modules · importar</p>
+        <h2>Trae solo lo que necesitas con <code>import</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/esModulesJS/main.js</span></div>
+                <div class="bar-note">aquí la extensión sí va completa</div>
+              </div>
+              <div class="code-body">
+                <div class="cl hl"><span class="cc"><span class="k">import</span> <span class="p">{</span> add<span class="p">,</span> multiply<span class="p">,</span> divide <span class="p">}</span> <span class="k">from</span> <span class="s">'./math.mjs'</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span><span class="f">add</span><span class="p">(</span><span class="n">5</span><span class="p">,</span> <span class="n">3</span><span class="p">))</span><span class="p">;</span>      <span class="c">// 8</span></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span><span class="f">multiply</span><span class="p">(</span><span class="n">6</span><span class="p">,</span> <span class="n">7</span><span class="p">))</span><span class="p">;</span> <span class="c">// 42</span></span></div>
+                <div class="cl"><span class="cc"><span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span><span class="f">divide</span><span class="p">(</span><span class="n">20</span><span class="p">,</span> <span class="n">5</span><span class="p">))</span><span class="p">;</span>   <span class="c">// 4</span></span></div>
+              </div>
+            </div>
+            <div class="term">
+              <div class="term-bar">Terminal</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">node src/esModulesJS/main.js</span></div>
+                <div><span class="out">8</span></div>
+                <div><span class="out">42</span></div>
+                <div><span class="out">4</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="notes">
+              <li><span class="mk">1</span><span><b>Sin prefijo.</b> Las llaves <code>{ }</code> desarman el módulo y traen las funciones directo al archivo: <code>add(5, 3)</code> en vez de <code>math.add(5, 3)</code>.</span></li>
+              <li><span class="mk">2</span><span><b>La extensión <code>.mjs</code> es obligatoria aquí.</b> A diferencia de <code>require()</code>, <code>import</code> no adivina extensiones.</span></li>
+              <li><span class="mk">3</span><span><b>Importa menos de lo que exportaste.</b> Dejamos <code>substract</code> fuera a propósito: traer solo lo necesario es lo que permite el <i>tree-shaking</i>.</span></li>
+              <li><span class="mk">4</span><span><b>Mismo resultado, otra sintaxis.</b> Compara esta salida con la del paso 4: idénticas.</span></li>
+            </ul>
+            <div class="diagram" data-diagram="esm-import"></div>
+            <p class="sr">Diagrama: main.js importa funciones nombradas desde math.mjs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 · nativos -->
+    <section class="slide" data-accent="nat" data-diagram="native" aria-label="Paso 7: módulos nativos" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">07</span><span class="sep"></span>Módulos nativos</p>
+        <h2>Lee un archivo con <code>fs</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/native/native.js</span></div>
+                <div class="bar-note">sin npm install</div>
+              </div>
+              <div class="code-body">
+                <div class="cl hl"><span class="cc"><span class="k">const</span> fs <span class="o">=</span> <span class="f">require</span><span class="p">(</span><span class="s">'fs'</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc">fs<span class="p">.</span><span class="f">readFile</span><span class="p">(</span><span class="s">'./src/native/archivoTexto.txt'</span><span class="p">,</span> <span class="s">'utf8'</span><span class="p">,</span> <span class="p">(</span>err<span class="p">,</span> data<span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="k">if</span> <span class="p">(</span>err<span class="p">)</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">    <span class="b">console</span><span class="p">.</span><span class="f">error</span><span class="p">(</span><span class="s">'Error al leer el archivo:'</span><span class="p">,</span> err<span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc">    <span class="k">return</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc">  <span class="p">}</span></span></div>
+                <div class="cl"><span class="cc">  <span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span>data<span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">})</span><span class="p">;</span></span></div>
+              </div>
+            </div>
+            <div class="term">
+              <div class="term-bar">Terminal</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">node src/native/native.js</span></div>
+                <div><span class="out">Este es un archivo de texto de ejemplo…</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="notes">
+              <li><span class="mk">1</span><span><b><code>require('fs')</code> sin <code>./</code> y sin instalar.</b> Node.js revisa primero sus módulos internos, así que <code>fs</code> gana antes de buscar en disco.</span></li>
+              <li><span class="mk">2</span><span><b>La ruta es relativa a donde ejecutas</b> el comando, no al archivo. Por eso incluye <code>./src/native/</code> y debes correrlo desde la raíz.</span></li>
+              <li><span class="mk">3</span><span><b><code>'utf8'</code> convierte bytes en texto</b> con tildes y ñ correctas. Sin este argumento recibirías un <code>Buffer</code>.</span></li>
+              <li><span class="mk">4</span><span><b>El patrón <code>(err, data)</code></b> es la firma clásica de Node.js: el error siempre va primero y se atiende antes de usar los datos.</span></li>
+            </ul>
+            <div class="diagram tall" data-diagram="native"></div>
+            <p class="sr">Diagrama: main.js llama a fs.readFile, el disco responde y el callback imprime el resultado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · externos -->
+    <section class="slide" data-accent="ext" data-diagram="external" aria-label="Paso 8: módulos externos" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">08</span><span class="sep"></span>Módulos externos</p>
+        <h2>Instala un paquete con <code>npm i</code></h2>
+        <div class="cols wide-left">
+          <div class="stack">
+            <div class="term">
+              <div class="term-bar">Terminal</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">npm i is-odd</span></div>
+                <div><span class="ok">added 2 packages</span> <span class="out">in 1s</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">node src/externalModule/main.js</span></div>
+                <div><span class="out">5 es un número impar.</span></div>
+              </div>
+            </div>
+            <div class="editor">
+              <div class="editor-bar">
+                <div class="lights"><i></i><i></i><i></i></div>
+                <div class="tab"><span class="dot"></span><span>src/externalModule/main.js</span></div>
+              </div>
+              <div class="code-body">
+                <div class="cl hl"><span class="cc"><span class="k">const</span> isOdd <span class="o">=</span> <span class="f">require</span><span class="p">(</span><span class="s">'is-odd'</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc"><span class="k">const</span> number <span class="o">=</span> <span class="n">5</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"></span></div>
+                <div class="cl"><span class="cc"><span class="k">if</span> <span class="p">(</span><span class="f">isOdd</span><span class="p">(</span>number<span class="p">))</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span><span class="s">`${number} es un número impar.`</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span></span></div>
+                <div class="cl"><span class="cc">  <span class="b">console</span><span class="p">.</span><span class="f">log</span><span class="p">(</span><span class="s">`${number} es un número par.`</span><span class="p">)</span><span class="p">;</span></span></div>
+                <div class="cl"><span class="cc"><span class="p">}</span></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <ul class="notes">
+              <li><span class="mk">1</span><span><b><code>'is-odd'</code> tampoco lleva <code>./</code></b>, igual que <code>fs</code>. Pero no es nativo: Node.js lo encuentra en <code>node_modules/</code>.</span></li>
+              <li><span class="mk">2</span><span><b><code>added 2 packages</code>, no 1.</b> <code>is-odd</code> depende de <code>is-number</code>. Así crecen los árboles de dependencias.</span></li>
+              <li><span class="mk">3</span><span><b>No subas <code>node_modules/</code> a Git.</b> Con <code>package.json</code> y <code>package-lock.json</code>, un <code>npm install</code> lo reconstruye igual.</span></li>
+              <li><span class="mk">4</span><span><b>Evalúa antes de instalar.</b> Cada paquete es código ajeno ejecutándose en tu proyecto: revisa mantenimiento, descargas y licencia.</span></li>
+            </ul>
+            <div class="diagram tall" data-diagram="external"></div>
+            <p class="sr">Diagrama: npm install descarga is-odd del registro hacia node_modules, y main.js lo requiere desde ahí.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · comparación -->
+    <section class="slide" data-accent="neu" data-diagram="compare" aria-label="Comparación entre CommonJS y ES Modules" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">09</span><span class="sep"></span>Comparación</p>
+        <h2>CommonJS frente a ES Modules</h2>
+        <div class="cols wide-left">
+          <div class="card">
+            <h3>Las diferencias que importan</h3>
+            <div class="tw">
+              <table class="cmp">
+                <thead>
+                  <tr><th scope="col"></th><th scope="col" class="vc">CommonJS</th><th scope="col" class="ve">ES Modules</th></tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">Importar</th><td><code>require('./math')</code></td><td><code>import { add } from './math.mjs'</code></td></tr>
+                  <tr><th scope="row">Exportar</th><td><code>module.exports = { add }</code></td><td><code>export function add()</code></td></tr>
+                  <tr><th scope="row">Extensión</th><td><code>.js</code> (o <code>.cjs</code>)</td><td><code>.mjs</code> (o <code>.js</code> con <code>"type":"module"</code>)</td></tr>
+                  <tr><th scope="row">Carga</th><td>Síncrona, en tiempo de ejecución</td><td>Asíncrona, analizada antes de ejecutar</td></tr>
+                  <tr><th scope="row">Ruta dinámica</th><td>Sí: <code>require(variable)</code></td><td>Solo con <code>await import(variable)</code></td></tr>
+                  <tr><th scope="row">Navegador</th><td>No funciona sin empaquetador</td><td>Funciona nativamente</td></tr>
+                  <tr><th scope="row">Cuándo usarlo</th><td>Código y tutoriales existentes</td><td>Proyectos nuevos</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="diagram" data-diagram="compare"></div>
+            <p class="sr">Diagrama: dos parejas enfrentadas — require con module.exports, e import con export.</p>
+            <ul class="notes">
+              <li><span class="mk">!</span><span><b>No es una competencia.</b> Vas a encontrar los dos en proyectos reales, y necesitas leer ambos con la misma soltura.</span></li>
+              <li><span class="mk">!</span><span><b>No los mezcles en un mismo archivo.</b> <code>import</code> y <code>require()</code> juntos es el error más común al empezar.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 · resolución -->
+    <section class="slide" data-accent="neu" data-diagram="resolution" aria-label="Cómo resuelve Node.js un módulo" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">10</span><span class="sep"></span>Bajo el capó</p>
+        <h2>Cómo decide Node.js qué cargar</h2>
+        <p class="lead">Las tres líneas se escriben casi igual, pero Node.js las resuelve por caminos distintos. Esto explica por qué <code>./</code> importa tanto.</p>
+        <div class="editor">
+          <div class="editor-bar">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="tab"><span class="dot"></span><span>tres require, tres caminos</span></div>
+          </div>
+          <div class="code-body">
+            <div class="cl"><span class="cc"><span class="f">require</span><span class="p">(</span><span class="s">'fs'</span><span class="p">)</span>        <span class="c">// 1 · módulo nativo, viene con Node.js</span></span></div>
+            <div class="cl"><span class="cc"><span class="f">require</span><span class="p">(</span><span class="s">'is-odd'</span><span class="p">)</span>    <span class="c">// 2 · paquete externo, en node_modules/</span></span></div>
+            <div class="cl"><span class="cc"><span class="f">require</span><span class="p">(</span><span class="s">'./math'</span><span class="p">)</span>   <span class="c">// 3 · archivo tuyo, ruta relativa</span></span></div>
+          </div>
+        </div>
+        <div class="diagram" data-diagram="resolution"></div>
+        <p class="sr">Diagrama: la ruta solicitada pasa por módulos nativos, luego node_modules, y finalmente archivos locales.</p>
+        <ul class="notes">
+          <li><span class="mk">·</span><span><b>Empieza por los nativos.</b> Por eso no puedes tener un paquete propio llamado <code>fs</code>: nunca ganaría.</span></li>
+          <li><span class="mk">·</span><span><b>Luego sube carpeta por carpeta</b> buscando un <code>node_modules/</code>, hasta la raíz del disco.</span></li>
+          <li><span class="mk">·</span><span><b>Con <code>./</code> o <code>../</code> salta todo eso</b> y va directo al archivo. Es el camino más rápido y predecible.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 13 · cierre -->
+    <section class="slide" data-accent="nat" data-diagram="closing" aria-label="Cierre y comandos finales" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">&check;</span><span class="sep"></span>Proyecto terminado</p>
+        <h2>Corre los cuatro y compara las salidas</h2>
+        <div class="cols">
+          <div class="stack">
+            <div class="term">
+              <div class="term-bar">Terminal · desde la raíz del proyecto</div>
+              <div class="term-body">
+                <div><span class="pmt">$</span> <span class="cmd">node src/commonJS/main.js</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">node src/esModulesJS/main.js</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">node src/native/native.js</span></div>
+                <div><span class="pmt">$</span> <span class="cmd">node src/externalModule/main.js</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Lo que quedó claro</h3>
+              <ul class="notes">
+                <li><span class="mk">1</span><span>Un módulo es <b>un archivo</b>, y exportar es decidir qué sale de él.</span></li>
+                <li><span class="mk">2</span><span><code>require</code>/<code>module.exports</code> e <code>import</code>/<code>export</code> resuelven lo mismo, con sintaxis y tiempos distintos.</span></li>
+                <li><span class="mk">3</span><span>Node.js busca primero en lo nativo, después en <code>node_modules/</code>, y solo con <code>./</code> va directo a tu archivo.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="diagram tall" data-diagram="closing"></div>
+            <p class="sr">Diagrama: los cuatro sistemas de módulos convergen en un proyecto terminado.</p>
+            <div class="grid4">
+              <div class="pill" style="--h:var(--c-cjs)"><span class="tag">03 · 04</span><span class="ttl">require</span></div>
+              <div class="pill" style="--h:var(--c-esm)"><span class="tag">05 · 06</span><span class="ttl">import</span></div>
+              <div class="pill" style="--h:var(--c-nat)"><span class="tag">07</span><span class="ttl">fs</span></div>
+              <div class="pill" style="--h:var(--c-ext)"><span class="tag">08</span><span class="ttl">npm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 · ejercicios -->
+    <section class="slide" data-accent="neu" data-diagram="exercises" aria-label="Ejercicios propuestos" hidden>
+      <div class="slide-inner">
+        <p class="eyebrow"><span class="num">&times;8</span><span class="sep"></span>Ejercicios</p>
+        <h2>Dos ejercicios por cada sistema de módulos</h2>
+        <p class="lead">En cada par, el primero <strong>agrega</strong> algo al proyecto y el segundo lo <strong>rompe o lo transforma</strong> a propósito, para que el error te enseñe cómo funciona por dentro.</p>
+
+        <div class="grid2x2">
+          <div class="exc" style="--h:var(--c-cjs)">
+            <span class="sys">commonJS<small>require · module.exports</small></span>
+            <ol>
+              <li><span class="lv">1</span><span>Agrega <code>power(base, exp)</code> en <code>math.js</code>, inclúyela en <code>module.exports</code> y llámala desde <code>main.js</code>.</span></li>
+              <li class="reto"><span class="lv">2</span><span>Saca <code>divide</code> de <code>module.exports</code> <b>sin borrar la función</b>. Ejecuta y explica el <code>TypeError</code> que aparece.</span></li>
+            </ol>
+          </div>
+
+          <div class="exc" style="--h:var(--c-esm)">
+            <span class="sys">esModulesJS<small>import · export</small></span>
+            <ol>
+              <li><span class="lv">1</span><span>Agrega <code>export function average(...nums)</code> en <code>math.mjs</code> e impórtala con llaves en <code>main.js</code>.</span></li>
+              <li class="reto"><span class="lv">2</span><span>Convierte <code>add</code> en <code>export default</code> y ajusta el <code>import</code>. Explica cuándo conviene un default y cuándo un named export.</span></li>
+            </ol>
+          </div>
+
+          <div class="exc" style="--h:var(--c-nat)">
+            <span class="sys">native<small>fs · módulos incluidos</small></span>
+            <ol>
+              <li><span class="lv">1</span><span>Usa <code>fs.writeFile</code> para guardar las cuatro operaciones matemáticas en <code>src/native/resultados.txt</code>.</span></li>
+              <li class="reto"><span class="lv">2</span><span>Reescribe <code>native.js</code> con <code>fs.promises.readFile</code> y <code>async/await</code>. Compara las dos versiones línea por línea.</span></li>
+            </ol>
+          </div>
+
+          <div class="exc" style="--h:var(--c-ext)">
+            <span class="sys">externalModule<small>npm · node_modules</small></span>
+            <ol>
+              <li><span class="lv">1</span><span>Instala <code>is-even</code> y recorre los números del 1 al 10 mostrando si cada uno es par o impar.</span></li>
+              <li class="reto"><span class="lv">2</span><span>Borra <code>node_modules/</code>, corre <code>npm install</code> y explica qué papel cumplió <code>package-lock.json</code>.</span></li>
+            </ol>
+          </div>
+        </div>
+
+        <p class="lvkey">
+          <span><i></i> Nivel 1 · agrega al proyecto</span>
+          <span><i class="full"></i> Nivel 2 · reto de análisis</span>
+        </p>
+
+        <div class="diagram wide" data-diagram="exercises"></div>
+        <p class="sr">Diagrama: los cuatro sistemas de módulos aportan dos ejercicios cada uno.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="chrome">
+    <div id="prog" style="width:0"></div>
+
+    <div id="buddy">
+      <button id="buddy-btn" type="button" aria-label="Mostrar u ocultar el consejo de Nodito" aria-expanded="true">
+        <svg viewBox="0 0 64 70" role="img" aria-hidden="true">
+          <g id="buddy-body" class="bob">
+            <line x1="32" y1="12" x2="32" y2="4" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle id="ant-dot" cx="32" cy="4" r="3.4" fill="var(--accent)"/>
+            <rect x="6" y="12" width="52" height="44" rx="14" fill="var(--surface-solid)" stroke="var(--accent)" stroke-width="2.4"/>
+            <rect x="11" y="17" width="42" height="34" rx="10" fill="color-mix(in srgb, var(--accent) 13%, transparent)"/>
+            <g id="eyes">
+              <circle id="eye-l" cx="23" cy="31" r="5.4" fill="var(--fg)"/>
+              <circle id="eye-r" cx="41" cy="31" r="5.4" fill="var(--fg)"/>
+              <circle cx="24.8" cy="29.2" r="1.7" fill="var(--surface-solid)"/>
+              <circle cx="42.8" cy="29.2" r="1.7" fill="var(--surface-solid)"/>
+            </g>
+            <rect id="lid" x="16" y="25" width="32" height="12" fill="var(--surface-solid)"/>
+            <path id="mouth" d="M26 42 Q32 47 38 42" stroke="var(--fg-dim)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <text x="32" y="65" text-anchor="middle" font-family="var(--font-mono)" font-size="9" font-weight="600" fill="var(--accent)">&lt;/&gt;</text>
+          </g>
+        </svg>
+      </button>
+      <div id="bubble" role="status"><span class="nm">Nodito</span><span id="tip"></span></div>
+    </div>
+
+    <div class="dots" id="dots" role="tablist" aria-label="Ir a una diapositiva"></div>
+    <span class="counter" id="counter">01 / 14</span>
+    <button class="navbtn" id="prev" type="button"><span class="ar">&larr;</span><span class="lb">Atrás</span></button>
+    <button class="navbtn" id="next" type="button"><span class="lb">Siguiente</span><span class="ar">&rarr;</span></button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script src="deck.js"></script>
