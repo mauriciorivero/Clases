@@ -108,7 +108,7 @@ window.SLIDES = [
   },
   {
     kicker: 'Mapa',
-    title: 'Los 22 patrones de Platzi',
+    title: 'Los 22 patrones mas usados en Web Dev',
     lead: 'Existen muchos patrones; lo importante es **saber que existen** y entenderlos. Hoy programamos los **ocho** resaltados.',
     cards: [
       {
