@@ -1,0 +1,30 @@
+{
+  "name": "6_patrones_diseno",
+  "version": "1.0.0",
+  "description": "Patrones de diseño para desarrollo web con Node.js: ejemplos ejecutables sin dependencias",
+  "keywords": [
+    "design-patterns",
+    "nodejs",
+    "singleton",
+    "strategy",
+    "observer",
+    "decorator"
+  ],
+  "license": "MIT",
+  "author": "@mauriciorivero",
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "singleton": "node src/01-singleton/demo.js",
+    "strategy": "node src/02-strategy/demo.js",
+    "observer": "node src/03-observer/demo.js",
+    "decorator": "node src/04-decorator/demo.js",
+    "adapter": "node src/05-adapter-repository/demo.js",
+    "factory": "node src/06-factory-method/demo.js",
+    "chain": "node src/07-chain-of-responsibility/demo.js",
+    "facade": "node src/08-facade/demo.js",
+    "integrado": "node src/09-integrado/api.js"
+  }
+}

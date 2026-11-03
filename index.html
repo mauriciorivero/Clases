@@ -56,9 +56,9 @@
           </a>
         </div>
         <ul class="pills rise" style="--d:4" aria-label="Temas">
-          <li>módulos</li><li>npm</li><li>fs</li><li>gRPC</li>
+          <li>módulos</li><li>npm</li><li>fs</li><li>gRPC</li><li>patrones</li>
         </ul>
-        <p class="hint rise" style="--d:5"><b id="statClasses">6</b> clases · <b id="statSlides">98</b> diapositivas · código de cada ejemplo</p>
+        <p class="hint rise" style="--d:5"><b id="statClasses">7</b> clases · <b id="statSlides">131</b> diapositivas · código de cada ejemplo</p>
       </div>
 
       <div class="hero__art rise" style="--d:3">
@@ -116,7 +116,7 @@
               <p class="card__desc">De una carpeta vacía a un generador de números aleatorios que lee argumentos desde la terminal.</p>
               <ul class="tags"><li>mkdir</li><li>git</li><li>npm</li><li>process.argv</li></ul>
               <div class="card__actions">
-                <a class="btn btn--sm card__go" href="0_Primer_Programa/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 0: Tu primer programa en Node.js</span>
+                <a class="btn btn--sm card__go" href="0_Primer_Programa/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 0: Tu primer programa en Node.js</span>
                   <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 <a class="btn btn--sm btn--ghost card__code" data-code="0_Primer_Programa" href="0_Primer_Programa/" target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 0</span></a>
@@ -162,7 +162,7 @@
               <p class="card__desc">Instala object-hash, genera hashes de contraseñas y objetos, y lee los datos desde la terminal.</p>
               <ul class="tags"><li>npm init</li><li>object-hash</li><li>npm start</li></ul>
               <div class="card__actions">
-                <a class="btn btn--sm card__go" href="2_npm/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 2: Encriptador con npm</span>
+                <a class="btn btn--sm card__go" href="2_npm/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 2: Encriptador con npm</span>
                   <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 <a class="btn btn--sm btn--ghost card__code" data-code="2_npm" href="2_npm/" target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 2</span></a>
@@ -185,7 +185,7 @@
               <p class="card__desc">Crea sena-date, pruébalo en local con npm link y publícalo en npm en catorce pasos.</p>
               <ul class="tags"><li>npm link</li><li>README.md</li><li>npm publish</li></ul>
               <div class="card__actions">
-                <a class="btn btn--sm card__go" href="3_publicar_paquete_npm/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 3: Publica tu paquete en npm</span>
+                <a class="btn btn--sm card__go" href="3_publicar_paquete_npm/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 3: Publica tu paquete en npm</span>
                   <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 <a class="btn btn--sm btn--ghost card__code" data-code="3_publicar_paquete_npm" href="3_publicar_paquete_npm/" target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 3</span></a>
@@ -208,7 +208,7 @@
               <p class="card__desc">Crea, lee, actualiza y borra archivos con el módulo nativo fs, y resuelve dos retos.</p>
               <ul class="tags"><li>writeFileSync</li><li>readFileSync</li><li>unlinkSync</li></ul>
               <div class="card__actions">
-                <a class="btn btn--sm card__go" href="4_crear_leer_archivos/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 4: Archivos con Node.js</span>
+                <a class="btn btn--sm card__go" href="4_crear_leer_archivos/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 4: Archivos con Node.js</span>
                   <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 <a class="btn btn--sm btn--ghost card__code" data-code="4_crear_leer_archivos" href="4_crear_leer_archivos/" target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 4</span></a>
@@ -231,10 +231,33 @@
               <p class="card__desc">Envía un audio a Whisper de NVIDIA por gRPC y guarda la transcripción en un archivo de texto.</p>
               <ul class="tags"><li>gRPC</li><li>.proto</li><li>.env</li><li>Whisper</li></ul>
               <div class="card__actions">
-                <a class="btn btn--sm card__go" href="5_leer_archivos_audio/dispositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 5: Transcribe audio con Node.js</span>
+                <a class="btn btn--sm card__go" href="5_leer_archivos_audio/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 5: Transcribe audio con Node.js</span>
                   <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
                 <a class="btn btn--sm btn--ghost card__code" data-code="5_leer_archivos_audio" href="5_leer_archivos_audio/" target="_blank" rel="noopener noreferrer">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 5</span></a>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li>
+          <article class="card reveal" style="--accent:#ff7a59;--accent-l:#c2410c" data-slides="33">
+            <div class="win" aria-hidden="true">
+              <div class="wbar"><span class="tl3"><i></i><i></i><i></i></span><span class="wt"><span class="fi">JS</span>src/01-singleton/logger.js</span></div>
+              <pre class="code"><code><span class="kw">export const</span> logger = Logger.<span class="fn">getInstance</span>();
+<span class="ps">$</span>npm run singleton
+<span class="out">¿Es la misma instancia? true</span></code></pre>
+            </div>
+            <div class="card__body">
+              <p class="card__meta"><span class="num">Clase 6</span><span class="dot"></span><span>33 diapositivas</span></p>
+              <h3 class="card__title">Patrones de diseño para la web</h3>
+              <p class="card__desc">Ocho patrones con código que corre: Singleton, Strategy, Observer, Decorator, Adapter, Factory, Chain of Responsibility y Facade.</p>
+              <ul class="tags"><li>Singleton</li><li>Observer</li><li>middlewares</li><li>Repository</li></ul>
+              <div class="card__actions">
+                <a class="btn btn--sm card__go" href="6_Patrones_Diseno/diapositivas_instruccion/index.html">Ver presentación<span class="sr-only"> de la clase 6: Patrones de diseño para la web</span>
+                  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <a class="btn btn--sm btn--ghost card__code" data-code="6_Patrones_Diseno" href="6_Patrones_Diseno/" target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>Código<span class="sr-only"> de la clase 6</span></a>
               </div>
             </div>
           </article>

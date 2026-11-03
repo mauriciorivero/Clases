@@ -7,7 +7,7 @@ Cada clase es una carpeta numerada con dos partes:
 - **El código** del proyecto que se construye en clase.
 - **Una presentación interactiva** que explica, paso a paso, cómo construirlo.
 
-En la raíz hay una **landing** (`index.html`) que reúne las seis presentaciones en tarjetas, cada una con su enlace a la presentación y a su código.
+En la raíz hay una **landing** (`index.html`) que reúne las siete presentaciones en tarjetas, cada una con su enlace a la presentación y a su código.
 
 ## Contenido
 
@@ -29,6 +29,7 @@ En la raíz hay una **landing** (`index.html`) que reúne las seis presentacione
 | 3 | [`3_publicar_paquete_npm`](3_publicar_paquete_npm) | El paquete `sena-date`, publicado en npm | `npm link`, `README.md`, `npm login`, `npm publish` | 17 |
 | 4 | [`4_crear_leer_archivos`](4_crear_leer_archivos) | Un programa que crea, lee, actualiza y borra un archivo | módulo `fs` (versiones `Sync`) | 16 |
 | 5 | [`5_leer_archivos_audio`](5_leer_archivos_audio) | Un transcriptor de audio con Whisper de NVIDIA | gRPC, archivos `.proto`, variables de entorno (`.env`) | 26 |
+| 6 | [`6_Patrones_Diseno`](6_Patrones_Diseno) | Ocho patrones de diseño con código que corre, y una mini API que los junta | Singleton, Strategy, Observer, Decorator, Adapter/Repository, Factory Method, Chain of Responsibility, Facade | 33 |
 
 ## Estructura del repositorio
 
@@ -39,7 +40,7 @@ En la raíz hay una **landing** (`index.html`) que reúne las seis presentacione
 ├── 0_Primer_Programa/
 │   ├── pasos.md                   # Guion escrito de la clase
 │   ├── primer_programa/           # Proyecto (src/index.js)
-│   └── dispositivas_instruccion/  # Presentación
+│   └── diapositivas_instruccion/  # Presentación
 ├── 1_module_vs_common/
 │   ├── package.json
 │   ├── src/
@@ -51,13 +52,21 @@ En la raíz hay una **landing** (`index.html`) que reúne las seis presentacione
 ├── 2_npm/                         # package.json, pasos.md, src/index.js, presentación
 ├── 3_publicar_paquete_npm/        # package.json, README.md, pasos.md, src/index.js, presentación
 ├── 4_crear_leer_archivos/         # package.json, pasos.md, src/fs.js, presentación
-└── 5_leer_archivos_audio/
-    ├── package.json
+├── 5_leer_archivos_audio/
+│   ├── package.json
+│   ├── src/
+│   │   ├── transcriptOpenAI.js    # Cliente gRPC que transcribe el audio
+│   │   ├── audio/audio.mp3        # Audio de ejemplo
+│   │   └── proto/                 # Definiciones .proto de NVIDIA Riva
+│   └── diapositivas_instruccion/  # Presentación
+└── 6_Patrones_Diseno/
+    ├── package.json               # "type": "module"; un script npm por patrón
+    ├── pasos.md                   # Guion escrito de la clase
     ├── src/
-    │   ├── transcriptOpenAI.js    # Cliente gRPC que transcribe el audio
-    │   ├── audio/audio.mp3        # Audio de ejemplo
-    │   └── proto/                 # Definiciones .proto de NVIDIA Riva
-    └── dispositivas_instruccion/  # Presentación
+    │   ├── lib/                   # Simuladores de Supabase y MongoDB (en memoria)
+    │   ├── 01-singleton/ … 08-facade/   # Un patrón por carpeta, cada una con su demo.js
+    │   └── 09-integrado/api.js    # Mini API que usa los ocho patrones
+    └── diapositivas_instruccion/  # Presentación
 ```
 
 Cada clase es un proyecto independiente: tiene su propio `package.json` y se instala y ejecuta por separado.
@@ -86,13 +95,13 @@ Cada tarjeta de la landing tiene dos botones: **Ver presentación** (abre las di
 Dentro de una presentación:
 
 - Navega con las flechas **←** y **→** (o con los botones de la pantalla).
-- Un robot te acompaña con consejos. En las clases 2 a 5 puedes hacer clic en él para pedir una pista sobre el código.
-- Las presentaciones de las clases 2 a 5 y la landing cambian entre tema claro y oscuro con la tecla **T**.
-- Las clases 0 y 5 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
+- Un robot te acompaña con consejos. En las clases 2 a 6 puedes hacer clic en él para pedir una pista sobre el código.
+- Las presentaciones de las clases 2 a 6 y la landing cambian entre tema claro y oscuro con la tecla **T**.
+- Las clases 0, 5 y 6 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
 
 ## Detalle de cada clase
 
-Presentación de cada clase: `<carpeta>/dispositivas_instruccion/index.html` (la clase 1 usa `diapositivas_instruccion`).
+Presentación de cada clase: `<carpeta>/diapositivas_instruccion/index.html`.
 
 ### Clase 0 · Primer programa
 
@@ -183,6 +192,33 @@ node src/transcriptOpenAI.js
 
 > **No subas el `.env` a git.** Guarda una clave privada y ya está excluido en el [`.gitignore`](.gitignore) de la raíz.
 
+### Clase 6 · Patrones de diseño para el desarrollo web
+
+Introduce los patrones de diseño y enseña ocho de ellos con código ejecutable pensado para las próximas clases (API REST y microservicios con Express, Supabase y MongoDB Atlas). Cuatro vienen del artículo de freeCodeCamp (Singleton, Strategy, Observer, Decorator) y cuatro son del backend (Adapter/Repository, Factory Method, Chain of Responsibility, Facade). El guion está en [`pasos.md`](6_Patrones_Diseno/pasos.md).
+
+| Carpeta | Patrón | Tipo |
+|---------|--------|------|
+| `01-singleton` | Singleton: un logger y un cliente de base de datos compartidos | Creacional |
+| `02-strategy` | Strategy: métodos de pago y formas de autenticación | Comportamiento |
+| `03-observer` | Observer: listas desplegables dependientes y eventos de pedidos con `events` | Comportamiento |
+| `04-decorator` | Decorator: un sándwich y funciones con caché, tiempo y reintentos | Estructural |
+| `05-adapter-repository` | Adapter + Repository: una sola interfaz sobre Supabase y MongoDB | Estructural |
+| `06-factory-method` | Factory Method: elige el repositorio con `DB_PROVIDER` | Creacional |
+| `07-chain-of-responsibility` | Chain of Responsibility: una cadena de middlewares al estilo Express | Comportamiento |
+| `08-facade` | Facade: un flujo de compra detrás de un solo método | Estructural |
+| `09-integrado` | Los ocho juntos en una mini API sin servidor | |
+
+No hay nada que instalar: Supabase y MongoDB están simulados en memoria (`src/lib/`) con los mismos nombres de método que los clientes reales.
+
+```bash
+cd 6_Patrones_Diseno
+npm run singleton        # también: strategy, observer, decorator, adapter, factory, chain, facade
+npm run integrado
+DB_PROVIDER=mongo npm run integrado    # la misma API sobre el simulador de MongoDB
+```
+
+> Los artículos en los que se basa la clase (Platzi y freeCodeCamp en español) se citan en la última diapositiva. El código de los ejemplos es nuevo: está escrito para ES Modules y corrige los errores de sintaxis que tiene el código del artículo de freeCodeCamp.
+
 ## Configurar los enlaces de la landing
 
 Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan donde sea que se sirva el repositorio. El botón **Código** necesita saber dónde está el repositorio:
@@ -200,7 +236,7 @@ Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan 
 
 1. Crea la carpeta `N_nombre_de_la_clase/` con su proyecto y su presentación (`diapositivas_instruccion/index.html`).
 2. En [`index.html`](index.html), copia uno de los `<li>` de la lista de tarjetas y cambia la carpeta en los dos enlaces, el título, la descripción, las etiquetas, el fragmento de código, los colores (`--accent` para el tema oscuro y `--accent-l` para el claro) y `data-slides`.
-3. Los totales del encabezado ("6 clases · 98 diapositivas") se recalculan solos.
+3. Los totales del encabezado ("7 clases · 131 diapositivas") se recalculan solos.
 
 ## Autor
 
