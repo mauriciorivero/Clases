@@ -7,7 +7,7 @@ Cada clase es una carpeta numerada con dos partes:
 - **El código** del proyecto que se construye en clase.
 - **Una presentación interactiva** que explica, paso a paso, cómo construirlo.
 
-En la raíz hay una **landing** (`index.html`) que reúne las siete presentaciones en tarjetas, cada una con su enlace a la presentación y a su código.
+En la raíz hay una **landing** (`index.html`) que reúne las ocho presentaciones en tarjetas, cada una con su enlace a la presentación y a su código.
 
 ## Contenido
 
@@ -30,6 +30,7 @@ En la raíz hay una **landing** (`index.html`) que reúne las siete presentacion
 | 4 | [`4_crear_leer_archivos`](4_crear_leer_archivos) | Un programa que crea, lee, actualiza y borra un archivo | módulo `fs` (versiones `Sync`) | 16 |
 | 5 | [`5_leer_archivos_audio`](5_leer_archivos_audio) | Un transcriptor de audio con Whisper de NVIDIA | gRPC, archivos `.proto`, variables de entorno (`.env`) | 26 |
 | 6 | [`6_Patrones_Diseno`](6_Patrones_Diseno) | Ocho patrones de diseño con código que corre, y una mini API que los junta | Singleton, Strategy, Observer, Decorator, Adapter/Repository, Factory Method, Chain of Responsibility, Facade | 33 |
+| 7 | [`7_conexion_DB`](7_conexion_DB) | Conexión a Supabase (PostgreSQL) y a MongoDB Atlas, con un script de prueba para cada una | `postgres`, `mongodb`, `.env`, cadena de conexión, SQL | 36 |
 
 ## Estructura del repositorio
 
@@ -59,13 +60,24 @@ En la raíz hay una **landing** (`index.html`) que reúne las siete presentacion
 │   │   ├── audio/audio.mp3        # Audio de ejemplo
 │   │   └── proto/                 # Definiciones .proto de NVIDIA Riva
 │   └── diapositivas_instruccion/  # Presentación
-└── 6_Patrones_Diseno/
-    ├── package.json               # "type": "module"; un script npm por patrón
+├── 6_Patrones_Diseno/
+│   ├── package.json               # "type": "module"; un script npm por patrón
+│   ├── pasos.md                   # Guion escrito de la clase
+│   ├── src/
+│   │   ├── lib/                   # Simuladores de Supabase y MongoDB (en memoria)
+│   │   ├── 01-singleton/ … 08-facade/   # Un patrón por carpeta, cada una con su demo.js
+│   │   └── 09-integrado/api.js    # Mini API que usa los ocho patrones
+│   └── diapositivas_instruccion/  # Presentación
+└── 7_conexion_DB/
+    ├── package.json               # "type": "module"; dependencias postgres y mongodb
     ├── pasos.md                   # Guion escrito de la clase
+    ├── .env.example               # Plantilla de credenciales (el .env real no se sube)
+    ├── parametrizacion/
+    │   └── script_homologado.sql  # Esquema mydb y tablas EMPLEADO, EVALUACION y USUARIO
     ├── src/
-    │   ├── lib/                   # Simuladores de Supabase y MongoDB (en memoria)
-    │   ├── 01-singleton/ … 08-facade/   # Un patrón por carpeta, cada una con su demo.js
-    │   └── 09-integrado/api.js    # Mini API que usa los ocho patrones
+    │   ├── db.js                  # Conexión a Supabase (exporta `sql`)
+    │   ├── probar.js              # Prueba la conexión y lista las tablas
+    │   └── probarMongo.js         # Prueba la conexión a MongoDB Atlas
     └── diapositivas_instruccion/  # Presentación
 ```
 
@@ -77,6 +89,7 @@ Cada clase es un proyecto independiente: tiene su propio `package.json` y se ins
 - Un navegador moderno para ver las presentaciones.
 - **Clase 3:** una cuenta en [npmjs.com](https://www.npmjs.com) con verificación en dos pasos activa, y una cuenta de GitHub.
 - **Clase 5:** una clave de API de NVIDIA (se obtiene en [build.nvidia.com](https://build.nvidia.com/openai/whisper-large-v3)) y `afconvert` (viene con macOS) o `ffmpeg` para convertir el audio a WAV.
+- **Clase 7:** un proyecto en [Supabase](https://supabase.com) y un cluster en [MongoDB Atlas](https://cloud.mongodb.com), con sus credenciales en un `.env`. También usa `process.loadEnvFile`.
 
 ## Ver las presentaciones
 
@@ -219,6 +232,28 @@ DB_PROVIDER=mongo npm run integrado    # la misma API sobre el simulador de Mong
 
 > Los artículos en los que se basa la clase (Platzi y freeCodeCamp en español) se citan en la última diapositiva. El código de los ejemplos es nuevo: está escrito para ES Modules y corrige los errores de sintaxis que tiene el código del artículo de freeCodeCamp.
 
+### Clase 7 · Conexión a bases de datos
+
+Conecta Node.js a dos bases de datos en la nube y comprueba cada conexión con un script: **Supabase** (PostgreSQL, con el paquete `postgres`) y **MongoDB Atlas** (con el driver `mongodb`). Las credenciales viven en un `.env` que no se sube a git. Es el paso previo a reemplazar los simuladores de la clase 6 por bases de datos reales. El guion está en [`pasos.md`](7_conexion_DB/pasos.md).
+
+| Archivo | Qué hace |
+|---------|----------|
+| `src/db.js` | Carga el `.env`, crea la conexión con `postgres()` y la exporta como `sql` (un Singleton por módulo). |
+| `src/probar.js` | Consulta la hora y la versión del servidor y lista cuáles tablas del script existen, con su número de columnas. |
+| `src/probarMongo.js` | Arma la URI de Atlas, hace `ping` y lista las bases de datos del cluster. |
+| `parametrizacion/script_homologado.sql` | Crea el esquema `mydb` y las tablas `EMPLEADO`, `EVALUACION` y `USUARIO`. Se ejecuta una vez en el SQL Editor de Supabase. |
+
+```bash
+cd 7_conexion_DB
+npm install
+# crea un archivo .env con DATABASE_URL, MONGO_DB_USERNAME y MONGO_DB_PASSWORD
+# (la plantilla está en pasos.md y en la diapositiva 8)
+npm run probar              # Supabase
+npm run probar:mongo        # MongoDB Atlas
+```
+
+> **No subas el `.env` a git.** Guarda las contraseñas de las dos bases de datos y ya está excluido en el [`.gitignore`](.gitignore) de la raíz. Los scripts necesitan red y credenciales válidas: sin ellas no se pueden ejecutar.
+
 ## Configurar los enlaces de la landing
 
 Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan donde sea que se sirva el repositorio. El botón **Código** necesita saber dónde está el repositorio:
@@ -236,7 +271,7 @@ Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan 
 
 1. Crea la carpeta `N_nombre_de_la_clase/` con su proyecto y su presentación (`diapositivas_instruccion/index.html`).
 2. En [`index.html`](index.html), copia uno de los `<li>` de la lista de tarjetas y cambia la carpeta en los dos enlaces, el título, la descripción, las etiquetas, el fragmento de código, los colores (`--accent` para el tema oscuro y `--accent-l` para el claro) y `data-slides`.
-3. Los totales del encabezado ("7 clases · 131 diapositivas") se recalculan solos.
+3. Los totales del encabezado ("8 clases · 167 diapositivas") se recalculan solos.
 
 ## Autor
 
