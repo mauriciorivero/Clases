@@ -1,0 +1,24 @@
+{
+  "name": "8_consultas_db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "probar": "node src/probar.js",
+    "probar:mongo": "node src/probarMongo.js",
+    "consultar": "node src/consultar.js",
+    "consultar:empleados": "node src/consultar.js empleados",
+    "consultar:movimientos": "node src/consultar.js movimientos",
+    "cargar:datos": "node src/cargarDatosEjemplo.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "dependencies": {
+    "mongodb": "^7.8.0",
+    "postgres": "^4.0.0"
+  }
+}

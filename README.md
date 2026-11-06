@@ -31,6 +31,7 @@ En la raíz hay una **landing** (`index.html`) que reúne las ocho presentacione
 | 5 | [`5_leer_archivos_audio`](5_leer_archivos_audio) | Un transcriptor de audio con Whisper de NVIDIA | gRPC, archivos `.proto`, variables de entorno (`.env`) | 26 |
 | 6 | [`6_Patrones_Diseno`](6_Patrones_Diseno) | Ocho patrones de diseño con código que corre, y una mini API que los junta | Singleton, Strategy, Observer, Decorator, Adapter/Repository, Factory Method, Chain of Responsibility, Facade | 33 |
 | 7 | [`7_conexion_DB`](7_conexion_DB) | Conexión a Supabase (PostgreSQL) y a MongoDB Atlas, con un script de prueba para cada una | `postgres`, `mongodb`, `.env`, cadena de conexión, SQL | 36 |
+| 8 | [`8_consultas_DB`](8_consultas_DB) | Consultas a empleados (Supabase) y movimientos (MongoDB Atlas), con las conexiones separadas de las pruebas | `.env` por partes, `find()`, validaciones, manejo de errores, SQL con parámetros | 43 |
 
 ## Estructura del repositorio
 
@@ -68,16 +69,33 @@ En la raíz hay una **landing** (`index.html`) que reúne las ocho presentacione
 │   │   ├── 01-singleton/ … 08-facade/   # Un patrón por carpeta, cada una con su demo.js
 │   │   └── 09-integrado/api.js    # Mini API que usa los ocho patrones
 │   └── diapositivas_instruccion/  # Presentación
-└── 7_conexion_DB/
-    ├── package.json               # "type": "module"; dependencias postgres y mongodb
+├── 7_conexion_DB/
+│   ├── package.json               # "type": "module"; dependencias postgres y mongodb
+│   ├── pasos.md                   # Guion escrito de la clase
+│   ├── .env.example               # Plantilla de credenciales (el .env real no se sube)
+│   ├── parametrizacion/
+│   │   └── script_homologado.sql  # Esquema mydb y tablas EMPLEADO, EVALUACION y USUARIO
+│   ├── src/
+│   │   ├── db.js                  # Conexión a Supabase (exporta `sql`)
+│   │   ├── probar.js              # Prueba la conexión y lista las tablas
+│   │   └── probarMongo.js         # Prueba la conexión a MongoDB Atlas
+│   └── diapositivas_instruccion/  # Presentación
+└── 8_consultas_DB/
+    ├── package.json               # "type": "module"; un script npm por tarea
     ├── pasos.md                   # Guion escrito de la clase
-    ├── .env.example               # Plantilla de credenciales (el .env real no se sube)
+    ├── .env.example               # Plantilla con una variable por dato de conexión
     ├── parametrizacion/
-    │   └── script_homologado.sql  # Esquema mydb y tablas EMPLEADO, EVALUACION y USUARIO
+    │   └── script_homologado.sql  # El mismo script de la clase 7
     ├── src/
-    │   ├── db.js                  # Conexión a Supabase (exporta `sql`)
+    │   ├── db.js                  # Conexión a Supabase, armada desde variables separadas
+    │   ├── db_mongo.js            # Conexión a MongoDB Atlas (conectarMongo / cerrarMongo)
     │   ├── probar.js              # Prueba la conexión y lista las tablas
-    │   └── probarMongo.js         # Prueba la conexión a MongoDB Atlas
+    │   ├── probarMongo.js         # Solo la prueba de la conexión a Atlas
+    │   ├── validaciones.js        # Funciones de validación compartidas
+    │   ├── consultarEmpleados.js  # Consulta SQL: todos los empleados
+    │   ├── consultarMovimientos.js  # Consulta la colección movimientos de Atlas
+    │   ├── consultar.js           # Ejecuta las consultas y las muestra como tabla
+    │   └── cargarDatosEjemplo.js  # Inserta datos de ejemplo (idempotente)
     └── diapositivas_instruccion/  # Presentación
 ```
 
@@ -90,6 +108,7 @@ Cada clase es un proyecto independiente: tiene su propio `package.json` y se ins
 - **Clase 3:** una cuenta en [npmjs.com](https://www.npmjs.com) con verificación en dos pasos activa, y una cuenta de GitHub.
 - **Clase 5:** una clave de API de NVIDIA (se obtiene en [build.nvidia.com](https://build.nvidia.com/openai/whisper-large-v3)) y `afconvert` (viene con macOS) o `ffmpeg` para convertir el audio a WAV.
 - **Clase 7:** un proyecto en [Supabase](https://supabase.com) y un cluster en [MongoDB Atlas](https://cloud.mongodb.com), con sus credenciales en un `.env`. También usa `process.loadEnvFile`.
+- **Clase 8:** lo mismo que la clase 7 (las tablas de `script_homologado.sql` ya creadas en Supabase y tu IP permitida en Atlas), con un `.env` donde cada dato de conexión tiene su propia variable.
 
 ## Ver las presentaciones
 
@@ -108,9 +127,9 @@ Cada tarjeta de la landing tiene dos botones: **Ver presentación** (abre las di
 Dentro de una presentación:
 
 - Navega con las flechas **←** y **→** (o con los botones de la pantalla).
-- Un robot te acompaña con consejos. En las clases 2 a 6 puedes hacer clic en él para pedir una pista sobre el código.
-- Las presentaciones de las clases 2 a 6 y la landing cambian entre tema claro y oscuro con la tecla **T**.
-- Las clases 0, 5 y 6 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
+- Un robot te acompaña con consejos. En las clases 2 a 8 puedes hacer clic en él para pedir una pista sobre el código.
+- Las presentaciones de las clases 2 a 8 y la landing cambian entre tema claro y oscuro con la tecla **T**.
+- Las clases 0 y 5 a 8 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
 
 ## Detalle de cada clase
 
@@ -254,6 +273,34 @@ npm run probar:mongo        # MongoDB Atlas
 
 > **No subas el `.env` a git.** Guarda las contraseñas de las dos bases de datos y ya está excluido en el [`.gitignore`](.gitignore) de la raíz. Los scripts necesitan red y credenciales válidas: sin ellas no se pueden ejecutar.
 
+### Clase 8 · Consultas a bases de datos
+
+Parte de la clase 7 y da el siguiente paso: **consultar**. Separa la conexión de la prueba también en MongoDB (`db_mongo.js` conecta y `probarMongo.js` prueba, como `db.js` y `probar.js`), arma las cadenas de conexión desde un `.env` con **una variable por dato**, y consulta los empleados de **Supabase** (SQL) y los movimientos de **MongoDB Atlas** (`find()`). Cada consulta valida lo que recibe y lo que devuelve la base de datos, y traduce los errores a mensajes que dicen qué revisar. El guion está en [`pasos.md`](8_consultas_DB/pasos.md).
+
+| Archivo | Qué hace |
+|---------|----------|
+| `src/db.js` | Lee `SUPABASE_DB_HOST`, `_PORT`, `_NAME`, `_USERNAME` y `_PASSWORD`, los valida, arma la cadena de conexión y exporta `sql`. |
+| `src/db_mongo.js` | Lee `MONGO_DB_HOST`, `_USERNAME`, `_PASSWORD` y `_NAME`, arma la URI y exporta `conectarMongo()` y `cerrarMongo()`. |
+| `src/probarMongo.js` | Solo la prueba: `ping` y lista de bases de datos. |
+| `src/validaciones.js` | Funciones de validación compartidas, entre ellas `validarOpciones({ limite })`. |
+| `src/consultarEmpleados.js` | `consultarEmpleados({ limite })`: SQL sobre `mydb."EMPLEADO"`, con parámetros y validación de cada fila. |
+| `src/consultarMovimientos.js` | `consultarMovimientos({ limite })`: `find()` sobre la colección `movimientos`, con validación de cada documento. |
+| `src/consultar.js` | Ejecuta las consultas y las muestra con `console.table`; si una falla, la otra se ejecuta igual. |
+| `src/cargarDatosEjemplo.js` | Inserta datos de ejemplo. Se puede repetir: no duplica ni modifica lo que ya existe. |
+
+```bash
+cd 8_consultas_DB
+npm install
+# crea un .env a partir de .env.example (una variable por dato de conexión)
+npm run probar                      # Supabase
+npm run probar:mongo                # MongoDB Atlas
+npm run cargar:datos                # datos de ejemplo (escribe en tus bases)
+npm run consultar                   # empleados y movimientos
+npm run consultar -- movimientos 3  # solo 3 movimientos (límite)
+```
+
+> `npm run cargar:datos` es el único script de la clase que **escribe** datos en tus bases de datos. Los demás solo leen.
+
 ## Configurar los enlaces de la landing
 
 Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan donde sea que se sirva el repositorio. El botón **Código** necesita saber dónde está el repositorio:
@@ -271,7 +318,7 @@ Las tarjetas enlazan a la presentación con rutas relativas, así que funcionan 
 
 1. Crea la carpeta `N_nombre_de_la_clase/` con su proyecto y su presentación (`diapositivas_instruccion/index.html`).
 2. En [`index.html`](index.html), copia uno de los `<li>` de la lista de tarjetas y cambia la carpeta en los dos enlaces, el título, la descripción, las etiquetas, el fragmento de código, los colores (`--accent` para el tema oscuro y `--accent-l` para el claro) y `data-slides`.
-3. Los totales del encabezado ("8 clases · 167 diapositivas") se recalculan solos.
+3. Los totales del encabezado ("9 clases · 210 diapositivas") se recalculan solos.
 
 ## Autor
 
