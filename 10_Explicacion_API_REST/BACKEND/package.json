@@ -1,0 +1,31 @@
+{
+  "name": "backend-persona",
+  "version": "1.0.0",
+  "description": "Un backend monolitico API REST para manejar y servir la informacion de una persona",
+  "keywords": [
+    "pesona",
+    "api",
+    "rest",
+    "mysql",
+    "nodejs",
+    "express",
+    "env",
+    "arquitectura",
+    "aprendizaje",
+    "instruccion"
+  ],
+  "license": "MIT",
+  "author": "Mauricio Rivero <mauro@mrd2.co>",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "morgan": "^1.12.1",
+    "mysql2": "^3.24.6"
+  }
+}
