@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión Personal</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/atoms.css" />
+  <link rel="stylesheet" href="css/molecules.css" />
+  <link rel="stylesheet" href="css/organisms.css" />
+</head>
+<body>
+  <!-- ORGANISM: encabezado con navegacion por pestañas (tab navigation) -->
+  <header class="app-header">
+    <h1 class="app-header__title">Gestión Personal</h1>
+    <nav class="tab-nav" aria-label="Navegación de módulos">
+      <button class="tab-nav__item is-active" data-tab="usuarios" type="button">Usuarios</button>
+      <button class="tab-nav__item" data-tab="telefonos" type="button">Teléfonos</button>
+      <button class="tab-nav__item" data-tab="redes-sociales" type="button">Redes Sociales</button>
+      <button class="tab-nav__item" data-tab="perfiles-sociales" type="button">Perfiles Sociales</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <!-- ===================== MODULO: USUARIOS ===================== -->
+    <section id="tab-usuarios" class="tab-panel is-active">
+      <!-- ORGANISM: formulario de creacion/edicion de Usuario -->
+      <form id="form-usuario" class="entity-form">
+        <h2 class="entity-form__title">Nuevo Usuario</h2>
+        <input type="hidden" id="usuario-id" />
+
+        <div class="form-field">
+          <label class="label" for="usuario-primer-nombre">Primer nombre *</label>
+          <input class="input" type="text" id="usuario-primer-nombre" required />
+        </div>
+        <div class="form-field">
+          <label class="label" for="usuario-segundo-nombre">Segundo nombre</label>
+          <input class="input" type="text" id="usuario-segundo-nombre" />
+        </div>
+        <div class="form-field">
+          <label class="label" for="usuario-primer-apellido">Primer apellido *</label>
+          <input class="input" type="text" id="usuario-primer-apellido" required />
+        </div>
+        <div class="form-field">
+          <label class="label" for="usuario-segundo-apellido">Segundo apellido</label>
+          <input class="input" type="text" id="usuario-segundo-apellido" />
+        </div>
+        <div class="form-field">
+          <label class="label" for="usuario-fecha-nacimiento">Fecha de nacimiento *</label>
+          <input class="input" type="date" id="usuario-fecha-nacimiento" required />
+        </div>
+        <div class="form-field">
+          <label class="label" for="usuario-ciudad">Ciudad de domicilio *</label>
+          <input class="input" type="text" id="usuario-ciudad" required />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="usuario-btn-guardar">Crear Usuario</button>
+          <button type="button" class="btn btn--secondary" id="usuario-btn-cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+
+      <!-- ORGANISM: tabla de listado de Usuarios -->
+      <table class="entity-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre completo</th>
+            <th>Fecha nacimiento</th>
+            <th>Edad</th>
+            <th>Ciudad</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usuarios-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ===================== MODULO: TELEFONOS ===================== -->
+    <section id="tab-telefonos" class="tab-panel">
+      <form id="form-telefono" class="entity-form">
+        <h2 class="entity-form__title">Nuevo Teléfono</h2>
+        <input type="hidden" id="telefono-id" />
+
+        <div class="form-field">
+          <label class="label" for="telefono-usuario">Usuario *</label>
+          <select class="select" id="telefono-usuario" required></select>
+        </div>
+        <div class="form-field">
+          <label class="label" for="telefono-numero">Número *</label>
+          <input class="input" type="tel" id="telefono-numero" required />
+        </div>
+        <div class="form-field">
+          <label class="label" for="telefono-tipo">Tipo *</label>
+          <select class="select" id="telefono-tipo" required>
+            <option value="Celular">Celular</option>
+            <option value="Fijo">Fijo</option>
+            <option value="Trabajo">Trabajo</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-field form-field--inline">
+          <label class="label" for="telefono-activo">Activo</label>
+          <input type="checkbox" id="telefono-activo" checked />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="telefono-btn-guardar">Crear Teléfono</button>
+          <button type="button" class="btn btn--secondary" id="telefono-btn-cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+
+      <table class="entity-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Número</th>
+            <th>Tipo</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="telefonos-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ===================== MODULO: REDES SOCIALES ===================== -->
+    <section id="tab-redes-sociales" class="tab-panel">
+      <form id="form-red-social" class="entity-form">
+        <h2 class="entity-form__title">Nueva Red Social</h2>
+        <input type="hidden" id="red-social-id" />
+
+        <div class="form-field">
+          <label class="label" for="red-social-nombre">Nombre *</label>
+          <input class="input" type="text" id="red-social-nombre" required />
+        </div>
+        <div class="form-field">
+          <label class="label" for="red-social-url">URL *</label>
+          <input class="input" type="url" id="red-social-url" placeholder="https://..." required />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="red-social-btn-guardar">Crear Red Social</button>
+          <button type="button" class="btn btn--secondary" id="red-social-btn-cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+
+      <table class="entity-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>URL</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="redes-sociales-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ===================== MODULO: PERFILES SOCIALES ===================== -->
+    <section id="tab-perfiles-sociales" class="tab-panel">
+      <form id="form-perfil-social" class="entity-form">
+        <h2 class="entity-form__title">Nuevo Perfil Social</h2>
+
+        <div class="form-field">
+          <label class="label" for="perfil-usuario">Usuario *</label>
+          <select class="select" id="perfil-usuario" required></select>
+        </div>
+        <div class="form-field">
+          <label class="label" for="perfil-red-social">Red Social *</label>
+          <select class="select" id="perfil-red-social" required></select>
+        </div>
+        <div class="form-field">
+          <label class="label" for="perfil-url">URL del perfil</label>
+          <input class="input" type="url" id="perfil-url" placeholder="https://..." />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary" id="perfil-btn-guardar">Crear Perfil Social</button>
+          <button type="button" class="btn btn--secondary" id="perfil-btn-cancelar" hidden>Cancelar edición</button>
+        </div>
+      </form>
+
+      <table class="entity-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Red Social</th>
+            <th>URL Perfil</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="perfiles-sociales-tbody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Contenedor de notificaciones (toasts) de exito/error -->
+  <div id="notificaciones" class="notification-area"></div>
+
+  <!-- El orden de los scripts importa: config/utils/api deben cargar antes que los organisms -->
+  <script src="js/config.js"></script>
+  <script src="js/utils/dom.js"></script>
+  <script src="js/molecules/comboboxBuscable.js"></script>
+  <script src="js/api/usuariosApi.js"></script>
+  <script src="js/api/telefonosApi.js"></script>
+  <script src="js/api/redesSocialesApi.js"></script>
+  <script src="js/api/perfilesSocialesApi.js"></script>
+  <script src="js/organisms/usuariosOrganism.js"></script>
+  <script src="js/organisms/telefonosOrganism.js"></script>
+  <script src="js/organisms/redesSocialesOrganism.js"></script>
+  <script src="js/organisms/perfilesSocialesOrganism.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
