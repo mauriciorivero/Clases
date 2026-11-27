@@ -1,0 +1,60 @@
+/* Variables de diseño (design tokens) inspiradas en el sistema de diseño de Vercel:
+   paleta neutra en blanco/negro/grises, acento negro puro, tipografia geometrica
+   y esquinas ligeramente redondeadas. Se centralizan aqui para reutilizarlas
+   en atoms.css, molecules.css y organisms.css. */
+:root {
+  /* Colores base */
+  --color-bg: #ffffff;
+  --color-bg-secondary: #fafafa;
+  --color-foreground: #000000;
+  --color-text: #171717;
+  --color-text-secondary: #666666;
+  --color-border: #eaeaea;
+  --color-border-strong: #000000;
+
+  /* Color de acento (botones primarios, enlaces, estados activos) */
+  --color-accent: #0070f3;
+  --color-accent-hover: #0761d1;
+
+  /* Colores semanticos */
+  --color-success: #0070f3;
+  --color-success-bg: #e6f4ff;
+  --color-danger: #e00;
+  --color-danger-bg: #ffefef;
+  --color-warning: #f5a623;
+
+  /* Tipografia */
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 0.9375rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.75rem;
+
+  /* Espaciado */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Bordes y sombras */
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #000000;
+    --color-bg-secondary: #111111;
+    --color-foreground: #ffffff;
+    --color-text: #ededed;
+    --color-text-secondary: #a1a1a1;
+    --color-border: #333333;
+    --color-border-strong: #ffffff;
+    --color-success-bg: #0a1f33;
+    --color-danger-bg: #2c0b0b;
+  }
+}

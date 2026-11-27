@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Teaching material for a SENA Node.js course (Ficha 3406211). Each numbered folder is one class and holds **two independent things**: a small Node.js project, and an interactive slide deck (static HTML/JS) that walks students through building it. The root `index.html` is a landing page that links to all the decks. Everything user-facing (UI text, code comments, docs, `pasos.md`) is written in **Spanish**; keep it that way.
 
-There is no build step, bundler or linter. The only real test suite is class 10's backend (`node --test`); every other `npm test` is the default `echo "Error: no test specified"` placeholder. There is also no root `package.json`: each class is its own project and is installed and run from inside its own folder.
+There is no build step, bundler or linter. The only real test suites are class 10's backend and class 11's two backends (`node --test`); every other `npm test` is the default `echo "Error: no test specified"` placeholder. There is also no root `package.json`: each class is its own project and is installed and run from inside its own folder.
 
 Class numbers follow the folder prefix. There is **no class 9**: the folders go from `8_consultas_DB` to `10_Explicacion_API_REST`.
 
@@ -61,13 +61,21 @@ npm start                                   # API on http://localhost:3000/api  
 npm test                                    # node:test suite; api.test.js needs the `mysqld` binary
 node --test tests/models.test.js            # one test file (models and services need no database)
 cd ../FRONTEND && python3 -m http.server 8000   # UI on http://localhost:8000
+
+# Class 11 (CommonJS microservices; needs MySQL, one .env per backend with the same JWT_SECRET)
+cd 11_Explicacion_Microservicios                # database setup is in its README.md
+(cd BACKEND_SRV_1 && npm install && npm start)  # auth service on :3001 (blocks; own terminal)
+(cd BACKEND_SRV_2 && npm install && npm start)  # management service on :3000 (own terminal)
+(cd FRONTEND && python3 -m http.server 8000)    # open /login.html
+(cd BACKEND_SRV_1 && npm test)                  # same in BACKEND_SRV_2; needs the `mysqld` binary
+node diapositivas_instruccion/js/generar-code-files.js  # after changing any file the deck shows
 ```
 
 View the landing and decks by serving the repo root (`npx serve .` or `python3 -m http.server 8000`) or by opening `index.html` directly. Requires Node.js >= 20.12 (classes 5, 7 and 8 use `process.loadEnvFile`).
 
 ## Gotchas that span files
 
-- **Module system differs per class.** Classes 1, 2, 6, 7 and 8 declare `"type": "module"`; classes 0, 3, 4, 5 and 10 are CommonJS (class 10's `package.json` has no `type` field). In class 1 this means `src/commonJS/main.js` (which uses `require`) fails under the project's `"type": "module"` unless a `{ "type": "commonjs" }` `package.json` is added inside `src/commonJS/`. That is documented in the README and is intentional teaching material, not a bug to fix silently.
+- **Module system differs per class.** Classes 1, 2, 6, 7 and 8 declare `"type": "module"`; classes 0, 3, 4, 5, 10 and 11 are CommonJS (class 10's `package.json` has no `type` field). In class 1 this means `src/commonJS/main.js` (which uses `require`) fails under the project's `"type": "module"` unless a `{ "type": "commonjs" }` `package.json` is added inside `src/commonJS/`. That is documented in the README and is intentional teaching material, not a bug to fix silently.
 - **cwd-relative paths.** `1_module_vs_common/src/native/native.js` opens `./archivoTexto.txt` relative to the cwd, and `4_crear_leer_archivos/src/fs.js` creates `ejemplo.txt` in the cwd. Class 5, by contrast, builds paths from `__dirname` and works from anywhere.
 - **Intentional oddities.** `substract` (sic) is the function name in both `math.js` and `math.mjs`, and the comments and slides refer to it by that name. Typos in `pasos.md`/`fs.js` strings are likewise in the originals. Do not rename or "fix" them without updating the slides.
 - **Class 5 secrets and external service.** `src/transcriptOpenAI.js` talks gRPC (not REST) to `grpc.nvcf.nvidia.com:443`, selecting Whisper via a `function-id` metadata header and authenticating with `NVIDIA_API_KEY`, loaded from a git-ignored `.env` in the class folder. The `.proto` files under `src/proto/riva/proto/` are vendored from NVIDIA Riva and loaded with `includeDirs: [src/proto]`. mp3 input is converted to 16 kHz mono WAV with `afconvert` (macOS) or `ffmpeg` before sending, so one of them must be installed. The script cannot run without the key and network access.
@@ -96,6 +104,7 @@ The decks are hand-written vanilla JS with no shared code between classes; each 
 | 7 | `diapositivas_instruccion/` | Same engine as class 6 (copied, not shared), plus a `sql` highlighter in `app.js`. `slides.js` defines `window.SLIDES` (36 slides). Self-contained |
 | 8 | `diapositivas_instruccion/` | Same engine as class 7 (copied, not shared); `app.js` only adds `ObjectId`, `TypeError`, `RangeError` and `Number` to the highlighter's globals. `slides.js` defines `window.SLIDES` (43 slides). Self-contained |
 | 10 | `diapositivas_instruccion/` | Its own engine (not the one from classes 5–8): `js/slides.js` defines `window.SLIDES` (38 slides), `PHASES`, `PIPELINE` and `ARCHITECTURE`; `js/code-files.js` holds the code (`window.CODE_FILES`); `js/app.js` is the controller and `js/scene.js` the three.js scene. Theme is a button only (no `T` key); `i` opens the index. Self-contained, with local fonts, three.js and highlight.js |
+| 11 | `diapositivas_instruccion/` | Class 10's engine (copied, not shared), plus `js/labs.js` (failure simulator, sequence diagram, SHA-256 and JWT labs) and `js/sha256.js`. `js/slides.js` defines `window.SLIDES` (45 slides), `PHASES`, `PIPELINE` and `ARCHITECTURE`; `js/code-files.js` is generated by `js/generar-code-files.js`. `T` toggles the theme. Self-contained |
 
 Classes 1 to 4 load Geist fonts from a CDN (and classes 1, 2 and 4 also load three.js from one), so they look right only online.
 
@@ -108,12 +117,13 @@ Classes 1 to 4 load Geist fonts from a CDN (and classes 1, 2 and 4 also load thr
 - Class 7: same structure as class 6, with `code.file` pointing at `src/db.js`, `src/probar.js`, `src/probarMongo.js`, `package.json` and `parametrizacion/script_homologado.sql` (`lang: 'sql'`). The blocks labelled `terminal`, `ejemplo.js`, `.env.example` and `src/probar.js (versión mínima)` are not backed by a file (`.env.example` deliberately shows `[TU-REF-DE-PROYECTO]` instead of the real Supabase project ref). The `npm run probar*` outputs in the terminal slides are real captures, so refresh them if the scripts' output changes. Because `start` and the hint keys depend on exact lines, re-check them after any edit to those files.
 - Class 8: same structure as class 7, with 24 snippets backed by `src/*.js`, `package.json` and `.env.example` (`lang: 'env'`). The blocks labelled `terminal`, `ejemplo.js` (the SQL-injection example) and `movimientos (documento)` are not backed by a file. The terminal slides are real captures of the scripts (the PostgreSQL version and timestamps vary), and the `cargar:datos` first-run output reflects a collection that already held one document. The deck was produced by cutting snippets out of `src/` with text anchors and computing `start` and the hint line numbers automatically; that generator is not in the repo, so after editing a source file re-check `start`, the snippet text and the hint keys by hand (a quick check: each file-backed `code.text` must equal `src/<file>` lines `start…start+n-1`). Slide text is formatted by `fmt()`, which cannot nest backticks, so never put a literal backtick inside `` `code` `` in a slide string.
 - Class 10: slides do not paste code. An `editor` visual names a file in `CODE_FILES` and selects lines (`tabs: [{ file, lang, range, focus }]`), so changing a string in `js/code-files.js` shifts those numbers. That file's header says it was generated from the Persona API sources, and comments in `slides.js` follow a `step_by_step.md`; neither the sources, the generator nor that script is in the repo. API messages and console output in the slides are deliberately written without accents, as the code prints them.
+- Class 11: same `file`/`range`/`focus` scheme as class 10, but `js/code-files.js` is generated from the real files (the generator has an explicit list, so no `.env` is ever embedded). After editing a source file, run the generator and re-check the ranges in `js/slides.js`. The API responses and console outputs in the slides are real captures, and each flow animation is a `route` of `[from, to, kind]` hops over the five nodes in `PIPELINE`. The backends never call each other: the "redirect" between them is done by the frontend. Class 11 has no `pasos.md`.
 - Each class's `pasos.md` is the written script the deck follows step by step; keep the three (script, source, deck) consistent. Class 10 has no `pasos.md`.
 
 ## Landing page
 
 `index.html` plus `assets/` (`landing.css`, `landing.js`, `theme-init.js`, fonts). Each class is an `<li><article class="card" data-slides="N">` with per-card colors set through `--accent` (dark theme) and `--accent-l` (light theme).
 
-- The hero totals ("10 clases · 248 diapositivas") are computed in `assets/landing.js` from the cards' `data-slides` attributes. When a deck's slide count changes, update `data-slides` on its card and the slide column of the README table. The README does not list class 10 yet.
+- The hero totals ("11 clases · 293 diapositivas") are computed in `assets/landing.js` from the cards' `data-slides` attributes. When a deck's slide count changes, update `data-slides` on its card and the slide column of the README table. The README does not list class 10 yet.
 - **Código** buttons use `data-code="<folder>"`. `landing.js` rewrites them to `<repo>/tree/HEAD/<folder>` using `REPO_URL` (top of the file), or the GitHub Pages hostname when deployed there, and falls back to the local relative link otherwise. Class 10's button points at the subfolder `10_Explicacion_API_REST/personal_management`, not at the class folder, so it opens on that project's README.
 - Adding a class: create `N_name/` with its project and `diapositivas_instruccion/index.html`, then copy a card `<li>` in `index.html` (the README's "Agregar una clase nueva" lists the fields to change).

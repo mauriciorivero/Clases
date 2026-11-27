@@ -1,0 +1,30 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.atom/
+
+# Temporales
+tmp/
+temp/
+cache/
+dist/
+build/
+
+# npm (si se usa para servir archivos)
+node_modules/
+package-lock.json
+npm-debug.log
+*.log
+
+# Archivos compilados (si los hay)
+*.min.js
+*.min.css

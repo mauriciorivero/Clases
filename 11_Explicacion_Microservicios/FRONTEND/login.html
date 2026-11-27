@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión - Gestión Personal</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/atoms.css" />
+  <link rel="stylesheet" href="css/molecules.css" />
+  <link rel="stylesheet" href="css/organisms.css" />
+</head>
+<body>
+  <main class="login">
+    <!-- ORGANISM: formulario de inicio de sesion. method="post" evita que las
+         credenciales queden en la URL si el JavaScript llegara a fallar -->
+    <form id="form-login" class="entity-form" method="post">
+      <h1 class="entity-form__title">Gestión Personal</h1>
+
+      <div class="form-field">
+        <label class="label" for="login-username">Usuario *</label>
+        <input class="input" type="text" id="login-username" maxlength="45" autocomplete="username" required autofocus />
+      </div>
+      <div class="form-field">
+        <label class="label" for="login-password">Contraseña *</label>
+        <input class="input" type="password" id="login-password" autocomplete="current-password" required />
+      </div>
+
+      <p id="login-error" class="login__error" role="alert" hidden></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary login__boton" id="login-btn-ingresar">Ingresar</button>
+      </div>
+    </form>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils/dom.js"></script>
+  <script src="js/utils/sesion.js"></script>
+  <script src="js/api/authApi.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

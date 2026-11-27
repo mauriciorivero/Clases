@@ -32,6 +32,7 @@ En la raíz hay una **landing** (`index.html`) que reúne las ocho presentacione
 | 6 | [`6_Patrones_Diseno`](6_Patrones_Diseno) | Ocho patrones de diseño con código que corre, y una mini API que los junta | Singleton, Strategy, Observer, Decorator, Adapter/Repository, Factory Method, Chain of Responsibility, Facade | 33 |
 | 7 | [`7_conexion_DB`](7_conexion_DB) | Conexión a Supabase (PostgreSQL) y a MongoDB Atlas, con un script de prueba para cada una | `postgres`, `mongodb`, `.env`, cadena de conexión, SQL | 36 |
 | 8 | [`8_consultas_DB`](8_consultas_DB) | Consultas a empleados (Supabase) y movimientos (MongoDB Atlas), con las conexiones separadas de las pruebas | `.env` por partes, `find()`, validaciones, manejo de errores, SQL con parámetros | 43 |
+| 11 | [`11_Explicacion_Microservicios`](11_Explicacion_Microservicios) | Dos microservicios integrados: autenticación y gestión personal, con su frontend | Microservicios, JWT, SHA-256 con sal, middleware, redirección entre servicios | 45 |
 
 ## Estructura del repositorio
 
@@ -128,8 +129,8 @@ Dentro de una presentación:
 
 - Navega con las flechas **←** y **→** (o con los botones de la pantalla).
 - Un robot te acompaña con consejos. En las clases 2 a 8 puedes hacer clic en él para pedir una pista sobre el código.
-- Las presentaciones de las clases 2 a 8 y la landing cambian entre tema claro y oscuro con la tecla **T**.
-- Las clases 0 y 5 a 8 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
+- Las presentaciones de las clases 2 a 8 y 11, y la landing, cambian entre tema claro y oscuro con la tecla **T**.
+- Las clases 0, 5 a 8 y 11 incluyen todo lo que necesitan. Las clases 1 a 4 cargan la tipografía Geist (y, en las clases 1 y 4, three.js) desde internet, así que necesitan conexión para verse como fueron diseñadas.
 
 ## Detalle de cada clase
 
@@ -300,6 +301,18 @@ npm run consultar -- movimientos 3  # solo 3 movimientos (límite)
 ```
 
 > `npm run cargar:datos` es el único script de la clase que **escribe** datos en tus bases de datos. Los demás solo leen.
+
+### Clase 11 · Microservicios con JWT y SHA-2
+
+Dos backends en Express, cada uno con su base de datos MySQL: `BACKEND_SRV_1` (puerto 3001) valida la contraseña con SHA-256 y sal y firma un JWT; `BACKEND_SRV_2` (puerto 3000) es la API de gestión personal de la clase 10, ahora protegida con ese token. El frontend inicia sesión en el primero y pasa a trabajar con el segundo.
+
+La instalación (bases de datos, archivos `.env` y arranque de los tres servidores) está en el [README de la clase](11_Explicacion_Microservicios/README.md).
+
+El código que muestra la presentación se copia de los archivos reales. Después de cambiar el proyecto, vuelve a generarlo y revisa los rangos de líneas en `js/slides.js`:
+
+```bash
+node 11_Explicacion_Microservicios/diapositivas_instruccion/js/generar-code-files.js
+```
 
 ## Configurar los enlaces de la landing
 
