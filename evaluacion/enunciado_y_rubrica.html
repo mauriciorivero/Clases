@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluación · Backend con microservicios, OAuth 2.0 y reportes PDF · Ficha 3406211</title>
+<style>
+  :root {
+    --fondo: #f4f6f3;
+    --papel: #ffffff;
+    --texto: #1c241c;
+    --suave: #556055;
+    --linea: #dbe2d8;
+    --acento: #2b7d00;
+    --acento-suave: #edf6e8;
+    --aviso: #fff7e0;
+    --aviso-linea: #e0a800;
+    --codigo: #f0f3ee;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main {
+    max-width: 1000px;
+    margin: 32px auto;
+    background: var(--papel);
+    border: 1px solid var(--linea);
+    border-radius: 12px;
+    padding: 48px 56px;
+  }
+  header { border-bottom: 4px solid var(--acento); padding-bottom: 24px; margin-bottom: 24px; }
+  .sobretitulo {
+    margin: 0 0 8px;
+    color: var(--acento);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  h1 { margin: 0 0 20px; font-size: 30px; line-height: 1.25; }
+  h2 {
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--linea);
+    font-size: 22px;
+  }
+  h3 { margin: 28px 0 10px; font-size: 17px; color: var(--acento); }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  a { color: var(--acento); }
+  code {
+    background: var(--codigo);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font: 0.88em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    overflow-wrap: break-word;
+  }
+  pre {
+    background: var(--codigo);
+    border: 1px solid var(--linea);
+    border-radius: 8px;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .ficha {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+    margin: 0;
+  }
+  .ficha div { background: var(--acento-suave); border-radius: 8px; padding: 10px 14px; }
+  .ficha dt { color: var(--suave); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .ficha dd { margin: 0; font-weight: 600; font-size: 15px; }
+  nav { background: var(--codigo); border-radius: 8px; padding: 14px 20px; }
+  nav strong { display: block; margin-bottom: 6px; }
+  nav ol { columns: 2 280px; margin: 0; }
+  .tabla { overflow-x: auto; margin: 0 0 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; }
+  th, td { border: 1px solid var(--linea); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--acento-suave); font-weight: 700; }
+  .num { text-align: center; white-space: nowrap; }
+  .aviso {
+    background: var(--aviso);
+    border-left: 4px solid var(--aviso-linea);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 0 0 16px;
+  }
+  .aviso p:last-child, .aviso ul:last-child { margin-bottom: 0; }
+  figure { margin: 0 0 16px; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { color: var(--suave); font-size: 13px; text-align: center; margin-top: 6px; }
+  .caja { fill: var(--papel); stroke: var(--acento); stroke-width: 1.5; }
+  .caja-servicio { fill: var(--acento-suave); stroke: var(--acento); stroke-width: 2; }
+  .flecha { stroke: var(--suave); stroke-width: 1.5; fill: none; marker-end: url(#punta); }
+  svg text { fill: var(--texto); font-size: 13px; text-anchor: middle; }
+  svg text.titulo { font-weight: 700; font-size: 14px; }
+  svg text.nota { fill: var(--suave); font-size: 12px; }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li { padding-left: 28px; position: relative; margin-bottom: 8px; }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 5px;
+    width: 13px;
+    height: 13px;
+    border: 1.5px solid var(--acento);
+    border-radius: 3px;
+  }
+  .rubrica th:nth-child(1) { width: 24%; }
+  .rubrica th:nth-child(5) { width: 7%; }
+  .rubrica .grupo td { background: var(--codigo); font-weight: 700; }
+  .rubrica .pts { display: block; color: var(--acento); font-weight: 700; margin-bottom: 2px; }
+  .total td { background: var(--acento-suave); font-weight: 700; }
+  .linea-firma td { height: 38px; }
+  #arquitectura td code { white-space: nowrap; }
+  footer { margin-top: 40px; color: var(--suave); font-size: 13px; text-align: center; }
+
+  @media (max-width: 700px) {
+    main { margin: 0; border: 0; border-radius: 0; padding: 24px 18px; }
+    h1 { font-size: 24px; }
+    .rubrica table { min-width: 720px; }
+  }
+  @media print {
+    @page { size: A4; margin: 14mm 12mm; }
+    body { background: #fff; font-size: 10pt; line-height: 1.4; }
+    main { max-width: none; margin: 0; border: 0; padding: 0; }
+    nav { display: none; }
+    header { padding-bottom: 14px; margin-bottom: 14px; }
+    h1 { font-size: 18pt; margin-bottom: 12px; }
+    h2 { font-size: 14pt; margin: 20px 0 10px; }
+    h3 { font-size: 11pt; margin: 14px 0 6px; }
+    h2, h3 { break-after: avoid; }
+    tr, figure, .aviso, pre { break-inside: avoid; }
+    thead { display: table-header-group; }
+    .ficha { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+    .ficha dd { font-size: 10pt; }
+    figure svg { max-width: 160mm; margin: 0 auto; }
+    .tabla { overflow: visible; padding-right: 1px; }
+    table { font-size: 8.5pt; }
+    th, td { padding: 5px 7px; }
+    .salto { break-before: page; }
+    footer { margin-top: 8px; }
+    .rubrica table { line-height: 1.28; }
+    .rubrica th, .rubrica td { padding: 3px 6px; }
+    #hoja th, #hoja td { padding: 3px 7px; }
+    #hoja .linea-firma td { height: 28px; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="sobretitulo">SENA · Tecnólogo en Análisis y Desarrollo de Software · Node.js</p>
+  <h1>Evaluación: backend con microservicios, autenticación OAuth 2.0 y reportes en PDF</h1>
+  <dl class="ficha">
+    <div><dt>Ficha</dt><dd>3406211</dd></div>
+    <div><dt>Instructor</dt><dd>Mauricio Rivero</dd></div>
+    <div><dt>Modalidad</dt><dd>Individual</dd></div>
+    <div><dt>Publicación</dt><dd>27 de noviembre de 2026</dd></div>
+    <div><dt>Fecha límite</dt><dd>Viernes 4 de diciembre de 2026, 11:59&nbsp;p.&nbsp;m.</dd></div>
+    <div><dt>Forma de entrega</dt><dd>Repositorio Git y despliegue</dd></div>
+    <div><dt>Escala</dt><dd>1 a 100 puntos</dd></div>
+    <div><dt>Se aprueba con</dt><dd>70 puntos o más</dd></div>
+  </dl>
+</header>
+
+<nav>
+  <strong>Contenido</strong>
+  <ol>
+    <li><a href="#contexto">Contexto y objetivo</a></li>
+    <li><a href="#alcance">Alcance</a></li>
+    <li><a href="#arquitectura">Arquitectura requerida</a></li>
+    <li><a href="#autenticacion">Microservicio de autenticación</a></li>
+    <li><a href="#gestion">Microservicio de gestión de personal</a></li>
+    <li><a href="#reportes">Microservicio de reportes</a></li>
+    <li><a href="#movil">Integración con React Native</a></li>
+    <li><a href="#calidad">Requisitos técnicos y de calidad</a></li>
+    <li><a href="#despliegue">Ramas y despliegue</a></li>
+    <li><a href="#entregables">Entregables</a></li>
+    <li><a href="#condiciones">Condiciones y revisión en clase</a></li>
+    <li><a href="#rubrica">Rúbrica de evaluación</a></li>
+    <li><a href="#hoja">Hoja de calificación</a></li>
+  </ol>
+</nav>
+
+<section id="contexto">
+  <h2>1. Contexto y objetivo</h2>
+  <p>Una organización necesita administrar la información de su personal: las personas registradas, sus teléfonos y sus perfiles en redes sociales. La consultará desde una aplicación móvil en <strong>React Native</strong>. Antes de ver cualquier dato, cada usuario debe iniciar sesión con <strong>Google</strong>, con <strong>Facebook</strong> o con su <strong>correo electrónico</strong>. Además, debe poder obtener un <strong>reporte en PDF</strong> con todo el personal registrado.</p>
+  <p><strong>Objetivo:</strong> desarrollar el backend de esta solución en Node.js, con arquitectura de microservicios, aplicando patrones de diseño, validación de datos, encapsulamiento y gestión de errores, y dejarlo <strong>desplegado y funcionando en Vercel o Render</strong>.</p>
+
+  <h3>Material de clase que le sirve de base</h3>
+  <div class="tabla"><table>
+    <thead><tr><th>Clase</th><th>Qué puede tomar de ella</th></tr></thead>
+    <tbody>
+      <tr><td>1, 2 y 4</td><td>Módulos, npm y manejo de archivos.</td></tr>
+      <tr><td>6 · Patrones de diseño</td><td>Los patrones exigidos en la sección 8.</td></tr>
+      <tr><td>7 y 8 · Bases de datos</td><td>Variables de entorno, consultas con parámetros, validaciones y manejo de errores.</td></tr>
+      <tr><td>10 · API REST</td><td>Express por capas, modelos con campos privados y el modelo de gestión de personal.</td></tr>
+      <tr><td>11 · Microservicios</td><td>Servicios independientes, JWT, hash de contraseñas con sal y middleware de autenticación.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="alcance">
+  <h2>2. Alcance</h2>
+  <div class="tabla"><table>
+    <thead><tr><th>Sí hace parte de esta evaluación</th><th>No hace parte de esta evaluación</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>
+          <ul>
+            <li>Tres microservicios: autenticación, gestión de personal y reportes.</li>
+            <li>Inicio de sesión con Google, con Facebook y con correo verificado mediante EmailJS.</li>
+            <li>CRUD completo de personas, teléfonos, redes sociales y perfiles sociales.</li>
+            <li>Reporte en PDF generado con un paquete de npm.</li>
+            <li>Una rama por microservicio, desplegada en Vercel o Render.</li>
+            <li>Endpoints listos para consumirse desde React Native.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li>La app en React Native: la evalúa otro instructor en clase (sección 11).</li>
+            <li>Inicio de sesión con X (Twitter).</li>
+            <li>Contenedores o API Gateway.</li>
+            <li>Roles y permisos: toda cuenta con sesión válida accede a todo.</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="arquitectura">
+  <h2>3. Arquitectura requerida</h2>
+
+  <figure>
+    <svg viewBox="0 0 900 400" role="img" aria-label="La aplicación cliente llama a los tres microservicios, desplegados cada uno desde su rama. Autenticación usa la base authentication, Google, Facebook y el servicio de correo EmailJS. Gestión de personal usa la base personal_management. Reportes pide los datos a gestión de personal por HTTP.">
+      <defs>
+        <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" style="fill: var(--suave)"></path>
+        </marker>
+      </defs>
+
+      <rect class="caja" x="310" y="10" width="280" height="54" rx="8"></rect>
+      <text class="titulo" x="450" y="33">Cliente</text>
+      <text x="450" y="52">App React Native o Postman</text>
+
+      <path class="flecha" d="M370 64 L135 138"></path>
+      <path class="flecha" d="M450 64 L450 138"></path>
+      <path class="flecha" d="M530 64 L765 138"></path>
+
+      <rect class="caja-servicio" x="20" y="140" width="230" height="76" rx="8"></rect>
+      <text class="titulo" x="135" y="168">1. Autenticación</text>
+      <text x="135" y="188">rama srv-autenticacion</text>
+      <text class="nota" x="135" y="205">firma el JWT</text>
+
+      <rect class="caja-servicio" x="335" y="140" width="230" height="76" rx="8"></rect>
+      <text class="titulo" x="450" y="168">2. Gestión de personal</text>
+      <text x="450" y="188">rama srv-gestion</text>
+      <text class="nota" x="450" y="205">verifica el JWT</text>
+
+      <rect class="caja-servicio" x="670" y="140" width="210" height="76" rx="8"></rect>
+      <text class="titulo" x="775" y="168">3. Reportes</text>
+      <text x="775" y="188">rama srv-reportes</text>
+      <text class="nota" x="775" y="205">verifica el JWT</text>
+
+      <path class="flecha" d="M668 178 L569 178"></path>
+      <text class="nota" x="618" y="170">HTTPS + JWT</text>
+
+      <path class="flecha" d="M80 216 L80 298"></path>
+      <path class="flecha" d="M195 216 L215 298"></path>
+      <path class="flecha" d="M450 216 L450 298"></path>
+
+      <rect class="caja" x="10" y="300" width="140" height="64" rx="8"></rect>
+      <text class="titulo" x="80" y="327">MySQL en la nube</text>
+      <text x="80" y="347">authentication</text>
+
+      <rect class="caja" x="165" y="300" width="150" height="64" rx="8"></rect>
+      <text class="titulo" x="240" y="327">Externos</text>
+      <text x="240" y="347">Google · FB · EmailJS</text>
+
+      <rect class="caja" x="355" y="300" width="190" height="64" rx="8"></rect>
+      <text class="titulo" x="450" y="327">MySQL en la nube</text>
+      <text x="450" y="347">personal_management</text>
+    </svg>
+    <figcaption>Cada servicio se despliega por separado desde su rama. Los tres comparten <code>JWT_SECRET</code>: uno firma el token y los otros lo verifican.</figcaption>
+  </figure>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Microservicio</th><th>Rama</th><th class="num">Puerto local</th><th>Datos</th><th>Responsabilidad</th></tr></thead>
+    <tbody>
+      <tr><td>Autenticación</td><td><code>srv-autenticacion</code></td><td class="num">3001</td><td>Base <code>authentication</code></td><td>Registro, verificación de correo, inicio de sesión y emisión del JWT.</td></tr>
+      <tr><td>Gestión de personal</td><td><code>srv-gestion</code></td><td class="num">3000</td><td>Base <code>personal_management</code></td><td>Personas, teléfonos, redes sociales y perfiles sociales.</td></tr>
+      <tr><td>Reportes</td><td><code>srv-reportes</code></td><td class="num">3002</td><td>Sin base propia</td><td>Generar el PDF con los datos que entrega gestión de personal.</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Reglas de arquitectura:</strong></p>
+  <ul>
+    <li>Cada microservicio tiene su propio <code>package.json</code>, sus variables de entorno y su comando <code>npm start</code>, y vive en su propia rama (sección 9).</li>
+    <li>Cada uno se despliega por separado, sin tocar los otros.</li>
+    <li>Ningún microservicio consulta la base de datos de otro. Reportes obtiene la información <strong>por HTTPS</strong>.</li>
+    <li>Cada servicio se organiza por capas: rutas → middleware → controladores → services → modelos.</li>
+    <li>Cada servicio protegido verifica el token por sí mismo y responde <code>401</code> si falta, es falso o expiró.</li>
+  </ul>
+</section>
+
+<section id="autenticacion">
+  <h2>4. Microservicio de autenticación</h2>
+
+  <h3>4.1 Ingreso por correo, con verificación</h3>
+  <ul>
+    <li><strong>Registro</strong> con correo, contraseña y nombre. La cuenta queda <em>pendiente de verificación</em>.</li>
+    <li>El servicio envía al correo un <strong>enlace o un código</strong> de verificación: aleatorio, de un solo uso, guardado como hash y con vencimiento (máximo 15 minutos para un código y 24 horas para un enlace). Un código admite máximo 5 intentos.</li>
+    <li>Debe existir la opción de <strong>reenviar</strong> la verificación; el reenvío anula la anterior.</li>
+    <li>Solo una cuenta verificada puede <strong>iniciar sesión</strong>.</li>
+    <li>La contraseña nunca se guarda en texto plano. Mínimo: SHA-256 con sal, como en la clase 11. Recomendado: <code>bcrypt</code>, <code>Argon2</code> o <code>crypto.scrypt</code>.</li>
+    <li>Si falla el envío del correo, el servicio informa el error sin detenerse y la persona puede pedir el reenvío.</li>
+    <li>El servicio de envío es <a href="https://www.emailjs.com/"><strong>EmailJS</strong></a>, usado desde el backend con el paquete de npm <code>@emailjs/nodejs</code>. La app nunca envía este correo, porque el código de verificación quedaría expuesto.</li>
+    <li>El identificador del servicio, el de la plantilla y las claves pública y privada van en variables de entorno.</li>
+    <li>El correo debe llegar a la <strong>bandeja real de cualquier destinatario</strong> (numeral 9.3).</li>
+  </ul>
+
+  <h3>4.2 Ingreso con Google y con Facebook (OAuth 2.0)</h3>
+  <ul>
+    <li>Flujo <em>Authorization Code</em> manejado por el backend. Los secretos de cada proveedor solo existen en las variables de entorno del servicio.</li>
+    <li>Se genera un parámetro <code>state</code> aleatorio y se comprueba en el <em>callback</em>.</li>
+    <li>Se piden solo los datos necesarios: Google <code>openid email profile</code>; Facebook <code>email public_profile</code>.</li>
+    <li>Si la persona cancela, o el proveedor no entrega un correo, se responde con un error claro.</li>
+    <li><strong>Una sola cuenta por correo:</strong> si el correo ya existe, la identidad del proveedor se vincula a esa cuenta. Si esa cuenta no estaba verificada, se anula su contraseña, para que nadie se apropie de un correo ajeno.</li>
+    <li>El <em>callback</em> redirige a la dirección configurada en <code>APP_REDIRECT_URL</code> con un <strong>código de un solo uso</strong> (vence en máximo 5 minutos). El cliente lo cambia por el JWT. <strong>El JWT nunca viaja en la URL.</strong></li>
+    <li>En la entrega, <code>APP_REDIRECT_URL</code> apunta a <code>/api/auth/oauth/resultado</code>, una ruta propia que muestra el código recibido y permite probar desde el navegador. Para la revisión en clase se cambia al enlace profundo de la app.</li>
+  </ul>
+  <p>Puede usar librerías (por ejemplo Passport) o implementar el flujo con <code>fetch</code>.</p>
+
+  <h3>4.3 Sesión</h3>
+  <p>Los tres métodos de ingreso entregan el <strong>mismo tipo de JWT</strong> (identificador de la cuenta, correo y vencimiento), firmado con <code>HS256</code> y con duración configurable en una variable de entorno.</p>
+
+  <h3>4.4 Endpoints mínimos</h3>
+  <div class="tabla"><table>
+    <thead><tr><th>Método y ruta</th><th>Entrada</th><th>Resultado esperado</th></tr></thead>
+    <tbody>
+      <tr><td><code>POST /api/auth/registro</code></td><td><code>correo</code>, <code>password</code>, <code>nombre</code></td><td><code>201</code> y envío de la verificación. <code>409</code> si el correo ya existe.</td></tr>
+      <tr><td><code>POST /api/auth/verificar</code> (código) o <code>GET /api/auth/verificar</code> (enlace)</td><td><code>correo</code> y <code>codigo</code>, o <code>token</code></td><td><code>200</code>. <code>400</code> si es inválido, ya se usó o venció.</td></tr>
+      <tr><td><code>POST /api/auth/reenviar-verificacion</code></td><td><code>correo</code></td><td><code>200</code>.</td></tr>
+      <tr><td><code>POST /api/auth/login</code></td><td><code>correo</code>, <code>password</code></td><td><code>200</code> con el token. <code>401</code> (mismo mensaje para correo inexistente o clave errada). <code>403</code> si la clave es correcta pero la cuenta no está verificada.</td></tr>
+      <tr><td><code>GET /api/auth/google</code> y <code>/google/callback</code></td><td>—</td><td>Redirección a Google y regreso con el código de un solo uso.</td></tr>
+      <tr><td><code>GET /api/auth/facebook</code> y <code>/facebook/callback</code></td><td>—</td><td>Redirección a Facebook y regreso con el código de un solo uso.</td></tr>
+      <tr><td><code>POST /api/auth/oauth/token</code></td><td><code>codigo</code></td><td><code>200</code> con el token. <code>401</code> si el código es inválido, ya se usó o venció.</td></tr>
+      <tr><td><code>GET /api/auth/oauth/resultado</code></td><td><code>codigo</code></td><td><code>200</code> mostrando el código recibido, para probar sin la app.</td></tr>
+      <tr><td><code>GET /api/auth/perfil</code></td><td>Token</td><td><code>200</code> con los datos de la cuenta, sin información sensible.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="aviso">
+    <p><strong>Atención si reutiliza la clase 11:</strong> allí no hay registro y la cuenta de base de datos solo tiene permiso de <strong>lectura</strong> sobre <code>authentication</code>. Aquí el servicio también escribe: actualice los permisos, la tabla de cuentas y los scripts SQL (los de la clase crean usuarios <code>@localhost</code>, que no existen en la nube). Necesitará guardar al menos la cuenta, las identidades de Google y Facebook y los códigos de verificación.</p>
+  </div>
+</section>
+
+<section id="gestion">
+  <h2>5. Microservicio de gestión de personal</h2>
+  <p>Mantiene el modelo de las clases 10 y 11, con las tablas <code>USUARIO</code> (personas), <code>TELEFONO</code>, <code>RED_SOCIAL</code> y <code>PERFIL_SOCIAL</code>. Las <strong>cuentas</strong> que inician sesión son distintas de las <strong>personas</strong> registradas.</p>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Recurso</th><th>Endpoints (todos exigen token)</th></tr></thead>
+    <tbody>
+      <tr><td>Personas</td><td><code>GET /api/usuarios</code> · <code>GET /api/usuarios/:id</code> (con sus teléfonos y perfiles) · <code>POST /api/usuarios</code> · <code>PUT /api/usuarios/:id</code> · <code>DELETE /api/usuarios/:id</code></td></tr>
+      <tr><td>Teléfonos</td><td><code>GET /api/telefonos</code> · <code>GET /api/telefonos/usuario/:usuarioId</code> · <code>POST /api/telefonos</code> · <code>PUT /api/telefonos/:id</code> · <code>DELETE /api/telefonos/:id</code></td></tr>
+      <tr><td>Redes sociales</td><td><code>GET /api/redes-sociales</code> · <code>POST /api/redes-sociales</code> · <code>PUT /api/redes-sociales/:id</code> · <code>DELETE /api/redes-sociales/:id</code></td></tr>
+      <tr><td>Perfiles sociales</td><td><code>GET /api/perfiles-sociales</code> · <code>GET /api/perfiles-sociales/usuario/:usuarioId</code> · <code>POST /api/perfiles-sociales</code> · <code>PUT</code> y <code>DELETE /api/perfiles-sociales/:redSocialId/:usuarioId</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Reglas de negocio:</strong></p>
+  <ul>
+    <li>El borrado de personas es <strong>lógico</strong> (<code>estado = 0</code>) y los listados muestran solo las activas.</li>
+    <li>La <strong>edad se calcula</strong> en el servidor a partir de la fecha de nacimiento, que no puede ser futura.</li>
+    <li>Los tipos de teléfono son: Celular, Fijo, Trabajo u Otro.</li>
+    <li>Una persona no puede tener dos perfiles en la misma red social (<code>409</code>).</li>
+    <li>No se puede eliminar una red social que tenga perfiles asociados (<code>409</code>).</li>
+    <li>Puede ampliar el tamaño de las columnas (por ejemplo, <code>url_perfil VARCHAR(45)</code> es corto), conservando tablas y relaciones.</li>
+  </ul>
+</section>
+
+<section id="reportes">
+  <h2>6. Microservicio de reportes</h2>
+  <p>Expone <code>GET /api/reportes/personas</code>, protegido con token, que responde un archivo PDF.</p>
+
+  <h3>6.1 Obtención de los datos</h3>
+  <ul>
+    <li>Los pide por HTTPS al microservicio de gestión de personal, reenviando el token del usuario. No se conecta a MySQL.</li>
+    <li>La dirección pública de ese servicio se configura en una variable de entorno.</li>
+    <li>Tenga en cuenta que <code>GET /api/usuarios</code>, tal como está en la clase 11, devuelve los teléfonos y perfiles vacíos: combine varios endpoints o cree uno que entregue todo junto.</li>
+  </ul>
+
+  <h3>6.2 Contenido del PDF</h3>
+  <ul>
+    <li>Título, fecha y hora de generación, correo de la cuenta que lo pidió y total de personas.</li>
+    <li><strong>Todas las personas activas</strong>, cada una con nombre completo, fecha de nacimiento, edad y ciudad.</li>
+    <li>Sus <strong>teléfonos</strong>: número, tipo y si está activo.</li>
+    <li>Sus <strong>perfiles sociales</strong>: nombre de la red y dirección del perfil.</li>
+    <li>Quien no tenga teléfonos o perfiles también aparece, con el texto “Sin registros”.</li>
+    <li>Paginación (“Página X de Y”), tildes y eñes correctas, y ningún texto cortado ni superpuesto.</li>
+  </ul>
+
+  <h3>6.3 Comportamiento</h3>
+  <ul>
+    <li>Encabezados <code>Content-Type: application/pdf</code> y <code>Content-Disposition: attachment; filename="reporte_personas_AAAA-MM-DD.pdf"</code>.</li>
+    <li>Sin token válido: <code>401</code>.</li>
+    <li>Si gestión de personal no responde: <code>502</code> o <code>503</code> con un mensaje en JSON, nunca un PDF incompleto.</li>
+    <li>Si no hay personas: un PDF que lo indique.</li>
+  </ul>
+  <h3>6.4 Paquete de npm obligatorio</h3>
+  <ul>
+    <li>El PDF se genera con un <strong>paquete de npm instalado con <code>npm install</code></strong>, como en la clase 2. Puede elegir el que prefiera (por ejemplo <code>pdfkit</code>, <code>pdfmake</code> o <code>puppeteer</code>).</li>
+    <li>El paquete queda declarado en <code>dependencies</code> del <code>package.json</code> de la rama <code>srv-reportes</code>, para que la plataforma lo instale al desplegar.</li>
+    <li>El <code>README</code> indica el paquete elegido y el comando con el que se instala.</li>
+    <li>No se acepta construir el archivo PDF a mano ni copiar el código de una librería dentro del proyecto.</li>
+    <li>Tenga en cuenta que <code>puppeteer</code> puede exigir configuración adicional al desplegar.</li>
+  </ul>
+</section>
+
+<section id="movil">
+  <h2>7. Integración con React Native</h2>
+  <p>La app en React Native consume el backend desplegado y se revisa en clase con otro instructor. Para que pueda usarlo:</p>
+  <ul>
+    <li>Respuestas en JSON (excepto el PDF y las redirecciones de OAuth).</li>
+    <li>Sesión por encabezado <code>Authorization: Bearer &lt;token&gt;</code>, sin depender de cookies para usar la API.</li>
+    <li>El mismo formato de error en los tres servicios: <code>{ "error": "mensaje", "detalles": [] }</code>.</li>
+    <li>Direcciones, CORS y <code>APP_REDIRECT_URL</code> configurables por variables de entorno (en la app, un enlace profundo como <code>miapp://auth</code>).</li>
+    <li>Contrato documentado: tabla de endpoints en el <code>README</code> y colección de Postman con variables para las direcciones y el token.</li>
+  </ul>
+</section>
+
+<section id="calidad">
+  <h2>8. Requisitos técnicos y de calidad</h2>
+
+  <h3>8.1 Tecnología</h3>
+  <ul>
+    <li>Node.js 20.12 o superior, Express y MySQL 8 (o un servicio compatible en la nube).</li>
+    <li>CommonJS o ES Modules, sin mezclarlos dentro de un mismo servicio.</li>
+    <li>Todas las consultas SQL con parámetros; nunca concatenando valores.</li>
+    <li>Credenciales y secretos solo en variables de entorno: <code>.env</code> en local y panel de Vercel o Render en el despliegue. Nunca en el código ni en el repositorio.</li>
+  </ul>
+
+  <h3>8.2 Patrones de diseño (mínimo 3 distintos)</h3>
+  <div class="tabla"><table>
+    <thead><tr><th>Patrón (clase 6)</th><th>Ejemplo de uso posible en este proyecto</th></tr></thead>
+    <tbody>
+      <tr><td>Strategy</td><td>Una estrategia por método de ingreso: correo, Google y Facebook.</td></tr>
+      <tr><td>Factory Method</td><td>Crear la estrategia o el generador de reportes según el tipo pedido.</td></tr>
+      <tr><td>Adapter / Repository</td><td>Convertir los perfiles de Google y Facebook a un mismo formato; aislar el SQL.</td></tr>
+      <tr><td>Facade</td><td>Un método <code>generarReporte()</code> que consulta, organiza y dibuja el PDF.</td></tr>
+      <tr><td>Observer</td><td>Un evento “cuenta registrada” que dispara el correo de verificación.</td></tr>
+      <tr><td>Singleton</td><td>Pool de conexiones o registro de eventos (<em>logger</em>) compartido.</td></tr>
+      <tr><td>Chain of Responsibility</td><td>Una cadena propia de validaciones antes de ejecutar una operación.</td></tr>
+      <tr><td>Decorator</td><td>Añadir reintentos o registro de tiempos a las llamadas entre servicios.</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Cada patrón debe estar <strong>implementado por usted</strong> y usarse en el funcionamiento real, no en un ejemplo aislado.</li>
+    <li><strong>No cuenta</strong> lo que ya trae una librería (<code>app.use</code> de Express, las estrategias de Passport) ni el código de las clases 10 y 11 copiado sin cambios.</li>
+    <li>El <code>README</code> incluye una tabla: patrón, servicio y archivo, problema que resuelve y justificación.</li>
+    <li>Puede usar otros patrones reconocidos si los justifica.</li>
+  </ul>
+
+  <h3>8.3 Validación de datos</h3>
+  <p>Todo dato que entra se valida en el servidor. Ante datos inválidos se responde <code>400</code> indicando qué campo falla. Como mínimo:</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Dato</th><th>Regla</th></tr></thead>
+    <tbody>
+      <tr><td>Correo</td><td>Formato válido; se guarda sin espacios y en minúsculas.</td></tr>
+      <tr><td>Contraseña</td><td>Mínimo 8 caracteres, con mayúscula, minúscula y número.</td></tr>
+      <tr><td>Textos (nombres, ciudad, red)</td><td>Obligatorios cuando corresponda y sin superar el tamaño de la columna.</td></tr>
+      <tr><td>Fecha de nacimiento</td><td>Fecha real y no futura.</td></tr>
+      <tr><td>Teléfono y tipo</td><td>Entre 7 y 15 dígitos (admite <code>+</code> inicial); tipo dentro de la lista permitida.</td></tr>
+      <tr><td>Direcciones web</td><td>Deben empezar por <code>http://</code> o <code>https://</code>.</td></tr>
+      <tr><td>Identificadores</td><td>Enteros positivos.</td></tr>
+      <tr><td>Campos calculados o de control</td><td>La edad, el estado de la persona y la verificación de la cuenta no se toman de lo que envíe el cliente.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>8.4 Encapsulamiento de la información</h3>
+  <ul>
+    <li>Clases del dominio con campos privados (<code>#</code>) y acceso controlado por <em>getters</em> y <em>setters</em> que validan.</li>
+    <li>Las respuestas nunca incluyen contraseñas, hashes, códigos de verificación ni secretos.</li>
+    <li>Cada capa cumple su función: los controladores no contienen SQL y los modelos no conocen <code>req</code> ni <code>res</code>.</li>
+  </ul>
+
+  <h3>8.5 Gestión de errores con <code>try / catch</code></h3>
+  <ul>
+    <li>Toda operación que pueda fallar va dentro de <code>try / catch</code>: base de datos, envío de correo, proveedores OAuth, llamadas entre servicios y generación del PDF.</li>
+    <li>Un manejador de errores centralizado en cada servicio traduce los errores a códigos HTTP.</li>
+    <li>El cliente nunca recibe la traza, el SQL ni datos internos; el detalle se registra en el servidor.</li>
+    <li>Un error en una petición no puede detener el servicio.</li>
+  </ul>
+  <div class="tabla"><table>
+    <thead><tr><th class="num">Código</th><th>Cuándo usarlo</th></tr></thead>
+    <tbody>
+      <tr><td class="num">200 / 201</td><td>Operación correcta / registro creado.</td></tr>
+      <tr><td class="num">400</td><td>Datos inválidos o referencia inexistente.</td></tr>
+      <tr><td class="num">401</td><td>Sin sesión válida o credenciales incorrectas.</td></tr>
+      <tr><td class="num">403</td><td>Cuenta sin verificar.</td></tr>
+      <tr><td class="num">404</td><td>Registro o ruta inexistente.</td></tr>
+      <tr><td class="num">409</td><td>Registro duplicado o relacionado con otros datos.</td></tr>
+      <tr><td class="num">500</td><td>Error interno no previsto.</td></tr>
+      <tr><td class="num">502 / 503</td><td>Un servicio del que se depende no responde.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="despliegue">
+  <h2>9. Ramas y despliegue</h2>
+
+  <h3>9.1 Una rama por microservicio</h3>
+  <div class="tabla"><table>
+    <thead><tr><th>Rama</th><th>Contenido</th><th>¿Se despliega?</th></tr></thead>
+    <tbody>
+      <tr><td><code>main</code></td><td><code>README</code> general, scripts SQL, colección de Postman y evidencias.</td><td>No</td></tr>
+      <tr><td><code>srv-autenticacion</code></td><td>Solo el microservicio de autenticación.</td><td>Sí</td></tr>
+      <tr><td><code>srv-gestion</code></td><td>Solo el microservicio de gestión de personal.</td><td>Sí</td></tr>
+      <tr><td><code>srv-reportes</code></td><td>Solo el microservicio de reportes.</td><td>Sí</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li>Use esos nombres de rama.</li>
+    <li>En cada rama de servicio, <code>package.json</code> está en la raíz, junto a <code>.env.example</code>, <code>.gitignore</code> y <code>src/</code>.</li>
+    <li>Las ramas de servicio no se fusionan entre sí ni en <code>main</code>.</li>
+  </ul>
+
+  <h3>9.2 Despliegue en Vercel o Render</h3>
+  <ul>
+    <li>Cada rama de servicio se despliega como una aplicación independiente en <strong>Vercel</strong> o en <strong>Render</strong> (puede combinarlas), con su propia dirección pública HTTPS.</li>
+    <li><strong>Render:</strong> un <em>Web Service</em> por microservicio, eligiendo su rama; compilación con <code>npm install</code> y arranque con <code>npm start</code>.</li>
+    <li><strong>Vercel:</strong> un proyecto por microservicio. En <em>Settings → Environments → Production → Branch Tracking</em> seleccione la rama del servicio y entregue el dominio de producción: las direcciones de vista previa pueden pedir inicio de sesión en Vercel.</li>
+    <li>La aplicación toma el puerto de la variable <code>PORT</code> (<code>SERVER_PORT</code>, de la clase 11, puede quedar para el entorno local).</li>
+    <li><code>GET /</code> en cada servicio responde un mensaje que confirma que está activo.</li>
+    <li>Las variables de entorno se configuran en el panel de la plataforma, con <strong>sus propias credenciales</strong>.</li>
+    <li>Los servicios se comunican por sus direcciones públicas, y los tres usan el mismo <code>JWT_SECRET</code>.</li>
+  </ul>
+
+  <h3>9.3 Lo que cambia al estar en la nube</h3>
+  <div class="tabla"><table>
+    <thead><tr><th>Tema</th><th>Qué debe tener en cuenta</th></tr></thead>
+    <tbody>
+      <tr><td>Base de datos</td><td>La plataforma no llega al MySQL de su equipo: use un MySQL en la nube con conexión cifrada (TLS). Una opción con plan gratuito es TiDB Cloud Starter, compatible con MySQL; compruebe que respete las llaves foráneas. Aiven ya no ofrece MySQL gratuito.</td></tr>
+      <tr><td>Correo</td><td>EmailJS funciona por HTTPS, así que no lo afecta el bloqueo de puertos SMTP del plan gratuito de Render. El plan gratuito de EmailJS permite 200 envíos al mes, 2 plantillas y 1 petición por segundo; al agotar la cuota, los envíos adicionales se descartan.</td></tr>
+      <tr><td>Memoria</td><td>El servicio puede reiniciarse o ejecutarse en varias instancias. El <code>state</code> de OAuth, los códigos de un solo uso y los intentos de verificación se guardan en la base de datos (el <code>state</code> también puede ir en una cookie firmada), no en variables en memoria.</td></tr>
+      <tr><td>Archivos</td><td>No dependa de guardar archivos en el servidor: genere el PDF y envíelo directamente.</td></tr>
+      <tr><td>Suspensión</td><td>Un servicio gratuito de Render se suspende tras 15 minutos sin tráfico y tarda cerca de un minuto en volver. Dé tiempos de espera suficientes entre servicios.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="entregables">
+  <h2>10. Entregables</h2>
+  <p>Envíe al instructor, antes de la fecha límite:</p>
+  <ul class="checklist">
+    <li>El enlace del repositorio Git, accesible para el instructor, con las cuatro ramas.</li>
+    <li>Las direcciones públicas de los tres servicios desplegados.</li>
+    <li>Una cuenta de prueba ya verificada (correo y contraseña), por un medio privado. No la escriba en el repositorio.</li>
+  </ul>
+  <p>El repositorio debe contener:</p>
+  <ul class="checklist">
+    <li>El código de cada microservicio en su rama, con <code>.env.example</code> sin valores secretos y un <code>.gitignore</code> que excluya <code>.env</code> y <code>node_modules</code>.</li>
+    <li>En <code>main</code>, un <code>README.md</code> con: descripción y diagrama; rama, plataforma y dirección de cada servicio; instalación local y pasos de despliegue; variables de entorno; configuración de Google y Facebook (direcciones de retorno) y de EmailJS (plantilla y variables); tabla de endpoints, tabla de patrones y paquete usado para el PDF.</li>
+    <li>Scripts SQL de las dos bases de datos, con datos de ejemplo ficticios.</li>
+    <li>Colección de Postman exportada, apuntando a las direcciones desplegadas, con casos correctos y casos de error.</li>
+    <li>Capturas en <code>docs/evidencias/</code>: despliegue de cada servicio con su rama, registro y correo de verificación recibido, ingreso con Google, ingreso con Facebook, una operación de cada recurso, errores controlados y reporte descargado. Sin secretos visibles.</li>
+    <li>Un PDF generado por el sistema desplegado (<code>docs/reporte_ejemplo.pdf</code>).</li>
+    <li>Historial de <em>commits</em> progresivo y con mensajes descriptivos (no un solo <em>commit</em> final).</li>
+  </ul>
+  <pre>rama main                          rama srv-autenticacion
+├── README.md                      ├── package.json
+├── parametrization/               ├── .env.example
+├── postman/                       ├── .gitignore
+└── docs/                          └── src/
+    ├── evidencias/
+    └── reporte_ejemplo.pdf        (srv-gestion y srv-reportes: igual)</pre>
+</section>
+
+<section id="condiciones">
+  <h2>11. Condiciones y revisión en clase</h2>
+  <h3>11.1 Condiciones</h3>
+  <ul>
+    <li>El trabajo es <strong>individual</strong>. La copia se trata según el Reglamento del Aprendiz SENA.</li>
+    <li>Se califica lo que esté en las ramas del repositorio el <strong>4 de diciembre de 2026 a las 11:59&nbsp;p.&nbsp;m.</strong> (hora de Colombia).</li>
+    <li>Puede partir del código de las clases 10 y 11, adaptándolo a todo lo que pide este documento.</li>
+    <li>El instructor califica el código y comprueba su funcionamiento en el despliegue, que opera con las <strong>credenciales propias de cada aprendiz</strong>. No debe entregar sus claves, ni escribirlas en el código o en el repositorio.</li>
+    <li>Los tres servicios deben seguir activos hasta que termine la revisión en clase.</li>
+    <li>Si un servicio no funciona desplegado, los criterios que dependen de él se califican, como máximo, en el nivel <em>Parcial</em>.</li>
+    <li>Use datos de personas <strong>ficticios</strong>.</li>
+  </ul>
+
+  <h3>11.2 Revisión en clase con React Native</h3>
+  <p>El proyecto totalmente funcional (la app en React Native conectada al backend desplegado) se revisa en clase con <strong>otro instructor</strong>, quien evalúa la parte de React Native. Esta rúbrica califica únicamente el backend.</p>
+  <p>Antes de la revisión:</p>
+  <ul>
+    <li>Abra la dirección de cada servicio para activarlo.</li>
+    <li>Cambie <code>APP_REDIRECT_URL</code> al enlace profundo de su app.</li>
+    <li>Tenga a mano sus cuentas de Google, Facebook y correo.</li>
+  </ul>
+
+  <h3>11.3 Recomendaciones</h3>
+  <div class="aviso">
+    <p><strong>Despliegue desde el primer día.</strong> Antes de programar las funciones, deje en línea una versión mínima de cada rama y pruebe la base de datos y el correo.</p>
+    <ul>
+      <li><strong>Google:</strong> cree las credenciales OAuth en Google Cloud Console, registre la dirección HTTPS de retorno del servicio desplegado y agregue su correo como usuario de prueba.</li>
+      <li><strong>Facebook:</strong> cree la aplicación en Meta for Developers y registre la dirección de retorno. En modo desarrollo solo pueden ingresar las cuentas con un rol en la aplicación.</li>
+      <li><strong>En local:</strong> si un proveedor no acepta <code>http://localhost</code>, use un túnel HTTPS.</li>
+      <li><strong>EmailJS:</strong> conecte un servicio de correo (por ejemplo, Gmail) y cree una plantilla con variables para el destinatario (<code>{{to_email}}</code> en <em>To Email</em>) y para el código o enlace. En <em>Account → Security</em>, active las peticiones de aplicaciones que no son un navegador, que vienen desactivadas. Pruebe enviando a un correo distinto del suyo y cuide la cuota mensual.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="rubrica" class="salto">
+  <h2>12. Rúbrica de evaluación (1 a 100 puntos)</h2>
+  <p>La nota es la suma de los puntos de los 25 criterios. La nota mínima es 1. Dentro de cada rango, el instructor asigna el valor según qué tan completo esté el criterio.</p>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Bloque</th><th class="num">Puntos</th></tr></thead>
+    <tbody>
+      <tr><td>A. Arquitectura y despliegue</td><td class="num">22</td></tr>
+      <tr><td>B. Autenticación</td><td class="num">25</td></tr>
+      <tr><td>C. Gestión de personal</td><td class="num">12</td></tr>
+      <tr><td>D. Reportes en PDF</td><td class="num">12</td></tr>
+      <tr><td>E. Patrones de diseño</td><td class="num">12</td></tr>
+      <tr><td>F. Validaciones, encapsulamiento y errores</td><td class="num">12</td></tr>
+      <tr><td>G. Integración y entrega</td><td class="num">5</td></tr>
+      <tr class="total"><td>Total</td><td class="num">100</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tabla rubrica"><table>
+    <thead><tr><th>Criterio</th><th>Completo</th><th>Parcial</th><th>Deficiente o ausente</th><th class="num">Máx.</th></tr></thead>
+    <tbody>
+      <tr class="grupo"><td colspan="5">A. Arquitectura y despliegue (22)</td></tr>
+      <tr>
+        <td><strong>A1.</strong> Tres servicios independientes y organizados por capas</td>
+        <td><span class="pts">4</span>Responsabilidades claras, configuración propia y capas respetadas.</td>
+        <td><span class="pts">2–3</span>Hay responsabilidades mezcladas o capas incompletas.</td>
+        <td><span class="pts">0–1</span>Es un solo servicio o falta alguno.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>A2.</strong> Separación de datos</td>
+        <td><span class="pts">3</span>Cada base la usa un solo servicio y cada servicio verifica el token.</td>
+        <td><span class="pts">2</span>Hay algún cruce de responsabilidades.</td>
+        <td><span class="pts">0–1</span>Los servicios comparten tablas.</td>
+        <td class="num">3</td>
+      </tr>
+      <tr>
+        <td><strong>A3.</strong> Una rama por microservicio</td>
+        <td><span class="pts">4</span>Existen <code>main</code> y las tres ramas; cada rama de servicio contiene solo su microservicio y es la que se despliega.</td>
+        <td><span class="pts">2–3</span>Ramas con código mezclado o despliegue desde otra rama.</td>
+        <td><span class="pts">0–1</span>Todo está en una sola rama.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>A4.</strong> Despliegue funcional en Vercel o Render</td>
+        <td><span class="pts">6–7</span>Los tres responden en su dirección pública, con base de datos en la nube, y funcionan registro, ingreso, CRUD y reporte.</td>
+        <td><span class="pts">4–5</span>Alguna función falla en la nube o solo funcionan dos servicios.</td>
+        <td><span class="pts">0–3</span>Funciona un servicio o ninguno.</td>
+        <td class="num">7</td>
+      </tr>
+      <tr>
+        <td><strong>A5.</strong> Comunicación entre los servicios desplegados</td>
+        <td><span class="pts">4</span>El token de autenticación es aceptado por los otros dos, reportes consulta a gestión por HTTPS, las direcciones vienen de variables de entorno y se controla la demora o caída.</td>
+        <td><span class="pts">2–3</span>Se comunican con fallas o con direcciones fijas en el código.</td>
+        <td><span class="pts">0–1</span>No se comunican en el despliegue.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">B. Microservicio de autenticación (25)</td></tr>
+      <tr>
+        <td><strong>B1.</strong> Registro y verificación del correo</td>
+        <td><span class="pts">6–7</span>Registra y envía con EmailJS, desde el backend, un enlace o código con vencimiento y un solo uso; el correo llega, permite reenviar y bloquea cuentas sin verificar.</td>
+        <td><span class="pts">4–5</span>Verifica, pero faltan vencimiento, reenvío, límite de intentos, almacenamiento seguro o entrega a cualquier destinatario, o usa un servicio distinto de EmailJS.</td>
+        <td><span class="pts">0–3</span>No se envía correo o la verificación no tiene efecto.</td>
+        <td class="num">7</td>
+      </tr>
+      <tr>
+        <td><strong>B2.</strong> Inicio de sesión con correo y emisión del JWT</td>
+        <td><span class="pts">4</span>Contraseña con hash y sal, JWT con vencimiento, respuestas <code>401</code> y <code>403</code> correctas y perfil sin datos sensibles.</td>
+        <td><span class="pts">2–3</span>Inicia sesión, con fallas en las respuestas o en la configuración del token.</td>
+        <td><span class="pts">0–1</span>No funciona, o la contraseña se guarda en texto plano.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>B3.</strong> OAuth 2.0 con Google</td>
+        <td><span class="pts">6–7</span>Flujo completo con <code>state</code>, crea o vincula la cuenta, regresa con código de un solo uso y entrega el JWT.</td>
+        <td><span class="pts">4–5</span>Ingresa, pero falta <code>state</code>, duplica cuentas, pone el JWT en la URL o no controla la cancelación.</td>
+        <td><span class="pts">0–3</span>El flujo no se completa o está simulado.</td>
+        <td class="num">7</td>
+      </tr>
+      <tr>
+        <td><strong>B4.</strong> OAuth 2.0 con Facebook</td>
+        <td><span class="pts">6–7</span>Igual que B3; además controla la cuenta que no entrega correo.</td>
+        <td><span class="pts">4–5</span>Ingresa, con las mismas fallas descritas en B3 o sin controlar la falta de correo.</td>
+        <td><span class="pts">0–3</span>El flujo no se completa o está simulado.</td>
+        <td class="num">7</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">C. Microservicio de gestión de personal (12)</td></tr>
+      <tr>
+        <td><strong>C1.</strong> Personas</td>
+        <td><span class="pts">4</span>CRUD completo, borrado lógico, edad calculada y detalle con teléfonos y perfiles.</td>
+        <td><span class="pts">2–3</span>Falta una operación o una regla.</td>
+        <td><span class="pts">0–1</span>Solo consulta o no funciona.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>C2.</strong> Teléfonos</td>
+        <td><span class="pts">2</span>CRUD completo, consulta por persona y tipos controlados.</td>
+        <td><span class="pts">1</span>Falta una operación o una regla.</td>
+        <td><span class="pts">0</span>No funciona.</td>
+        <td class="num">2</td>
+      </tr>
+      <tr>
+        <td><strong>C3.</strong> Redes sociales y perfiles sociales</td>
+        <td><span class="pts">4</span>CRUD completo de ambos, con relaciones correctas y los conflictos <code>409</code>.</td>
+        <td><span class="pts">2–3</span>Faltan operaciones o control de duplicados y relaciones.</td>
+        <td><span class="pts">0–1</span>Incompleto o no funciona.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>C4.</strong> Protección con JWT</td>
+        <td><span class="pts">2</span>Todas las rutas exigen un token válido, venga de correo, Google o Facebook.</td>
+        <td><span class="pts">1</span>Alguna ruta queda sin proteger o la verificación es débil.</td>
+        <td><span class="pts">0</span>No se protege.</td>
+        <td class="num">2</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">D. Microservicio de reportes (12)</td></tr>
+      <tr>
+        <td><strong>D1.</strong> Obtención de los datos</td>
+        <td><span class="pts">3</span>Toma los datos de gestión de personal y une bien personas, teléfonos y perfiles.</td>
+        <td><span class="pts">2</span>Obtiene datos incompletos o mal relacionados.</td>
+        <td><span class="pts">0–1</span>Consulta directamente la base de datos o usa datos escritos a mano.</td>
+        <td class="num">3</td>
+      </tr>
+      <tr>
+        <td><strong>D2.</strong> Contenido y presentación del PDF</td>
+        <td><span class="pts">5</span>Incluye todo lo del numeral 6.2, legible y paginado.</td>
+        <td><span class="pts">3–4</span>Faltan algunos datos o hay problemas de diseño (cortes, tildes, paginación).</td>
+        <td><span class="pts">0–2</span>Faltan teléfonos o perfiles, es ilegible o no se genera.</td>
+        <td class="num">5</td>
+      </tr>
+      <tr>
+        <td><strong>D3.</strong> Descarga y errores</td>
+        <td><span class="pts">2</span>Encabezados correctos, protegido y con respuesta clara si faltan datos o el otro servicio.</td>
+        <td><span class="pts">1</span>Descarga, pero no controla alguno de esos casos.</td>
+        <td><span class="pts">0</span>No descarga o el servicio se cae.</td>
+        <td class="num">2</td>
+      </tr>
+      <tr>
+        <td><strong>D4.</strong> Paquete de npm para el PDF</td>
+        <td><span class="pts">2</span>Genera el PDF con un paquete instalado con <code>npm install</code>, declarado en <code>dependencies</code>, documentado y funcionando en el despliegue (numeral 6.4).</td>
+        <td><span class="pts">1</span>Usa un paquete de npm, pero está mal declarado, sin documentar o falla al desplegar.</td>
+        <td><span class="pts">0</span>No usa un paquete de npm.</td>
+        <td class="num">2</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">E. Patrones de diseño (12)</td></tr>
+      <tr>
+        <td><strong>E1.</strong> Primer patrón</td>
+        <td><span class="pts">4</span>Bien implementado, usado en el flujo real y justificado en el <code>README</code>.</td>
+        <td><span class="pts">2–3</span>Implementación forzada o incompleta, o justificación débil.</td>
+        <td><span class="pts">0–1</span>Solo se menciona o no cuenta según el numeral 8.2.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>E2.</strong> Segundo patrón (distinto)</td>
+        <td><span class="pts">4</span>Igual que E1.</td>
+        <td><span class="pts">2–3</span>Igual que E1.</td>
+        <td><span class="pts">0–1</span>Igual que E1, o repite un patrón.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>E3.</strong> Tercer patrón (distinto)</td>
+        <td><span class="pts">4</span>Igual que E1.</td>
+        <td><span class="pts">2–3</span>Igual que E1.</td>
+        <td><span class="pts">0–1</span>Igual que E1, o repite un patrón.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">F. Validaciones, encapsulamiento y errores (12)</td></tr>
+      <tr>
+        <td><strong>F1.</strong> Validación de datos</td>
+        <td><span class="pts">4</span>Cumple las reglas del numeral 8.3 en todos los servicios, con <code>400</code> y detalle del campo.</td>
+        <td><span class="pts">2–3</span>Valida solo algunos datos o con mensajes poco claros.</td>
+        <td><span class="pts">0–1</span>Casi no valida.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>F2.</strong> Encapsulamiento y datos protegidos</td>
+        <td><span class="pts">4</span>Campos privados, capas separadas, respuestas sin datos sensibles y SQL con parámetros.</td>
+        <td><span class="pts">2–3</span>Encapsulamiento parcial o capas mezcladas.</td>
+        <td><span class="pts">0–1</span>Expone datos sensibles, sube secretos al repositorio o concatena valores en SQL.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr>
+        <td><strong>F3.</strong> Gestión de errores</td>
+        <td><span class="pts">4</span><code>try / catch</code> donde puede fallar, manejador central, códigos correctos y ningún detalle interno expuesto.</td>
+        <td><span class="pts">2–3</span>Manejo incompleto o códigos HTTP inconsistentes.</td>
+        <td><span class="pts">0–1</span>Los errores detienen el servicio o llegan sin tratar.</td>
+        <td class="num">4</td>
+      </tr>
+      <tr class="grupo"><td colspan="5">G. Integración y entrega (5)</td></tr>
+      <tr>
+        <td><strong>G1.</strong> Listo para React Native</td>
+        <td><span class="pts">3</span>Formato uniforme, endpoints documentados, retorno configurable y colección de Postman contra el despliegue.</td>
+        <td><span class="pts">2</span>Documentación o colección incompletas, o formatos distintos entre servicios.</td>
+        <td><span class="pts">0–1</span>No hay documentación ni colección.</td>
+        <td class="num">3</td>
+      </tr>
+      <tr>
+        <td><strong>G2.</strong> Repositorio y entregables</td>
+        <td><span class="pts">2</span><code>README</code> reproducible, SQL, <code>.env.example</code>, evidencias, PDF de ejemplo y <em>commits</em> progresivos.</td>
+        <td><span class="pts">1</span>Faltan algunos entregables o el historial es mínimo.</td>
+        <td><span class="pts">0</span>Faltan casi todos los entregables.</td>
+        <td class="num">2</td>
+      </tr>
+      <tr class="total"><td colspan="4">Total</td><td class="num">100</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Resultado</h3>
+  <div class="tabla"><table>
+    <thead><tr><th class="num">Puntaje</th><th>Resultado</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td class="num">90 – 100</td><td>Aprobado · Sobresaliente</td><td>Cumple todo, con calidad y buena documentación.</td></tr>
+      <tr><td class="num">70 – 89</td><td>Aprobado</td><td>La solución funciona, con detalles por mejorar.</td></tr>
+      <tr><td class="num">1 – 69</td><td>No aprobado</td><td>Faltan funciones o requisitos esenciales.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="hoja" class="salto">
+  <h2>13. Hoja de calificación</h2>
+  <div class="tabla"><table>
+    <tbody>
+      <tr class="linea-firma"><th style="width: 28%">Aprendiz</th><td></td></tr>
+      <tr class="linea-firma"><th>Repositorio</th><td></td></tr>
+      <tr class="linea-firma"><th>Direcciones desplegadas</th><td></td></tr>
+      <tr class="linea-firma"><th>Fecha de calificación</th><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="tabla"><table>
+    <thead><tr><th>Criterio</th><th class="num">Máx.</th><th class="num" style="width: 14%">Obtenido</th><th style="width: 40%">Observaciones</th></tr></thead>
+    <tbody>
+      <tr><td>A1. Tres servicios por capas</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>A2. Separación de datos</td><td class="num">3</td><td></td><td></td></tr>
+      <tr><td>A3. Ramas</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>A4. Despliegue funcional</td><td class="num">7</td><td></td><td></td></tr>
+      <tr><td>A5. Comunicación entre servicios</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>B1. Registro y verificación</td><td class="num">7</td><td></td><td></td></tr>
+      <tr><td>B2. Ingreso por correo y JWT</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>B3. Google</td><td class="num">7</td><td></td><td></td></tr>
+      <tr><td>B4. Facebook</td><td class="num">7</td><td></td><td></td></tr>
+      <tr><td>C1. Personas</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>C2. Teléfonos</td><td class="num">2</td><td></td><td></td></tr>
+      <tr><td>C3. Redes y perfiles</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>C4. Protección con JWT</td><td class="num">2</td><td></td><td></td></tr>
+      <tr><td>D1. Obtención de datos</td><td class="num">3</td><td></td><td></td></tr>
+      <tr><td>D2. Contenido del PDF</td><td class="num">5</td><td></td><td></td></tr>
+      <tr><td>D3. Descarga y errores</td><td class="num">2</td><td></td><td></td></tr>
+      <tr><td>D4. Paquete npm para el PDF</td><td class="num">2</td><td></td><td></td></tr>
+      <tr><td>E1. Primer patrón</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>E2. Segundo patrón</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>E3. Tercer patrón</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>F1. Validación</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>F2. Encapsulamiento</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>F3. Gestión de errores</td><td class="num">4</td><td></td><td></td></tr>
+      <tr><td>G1. Listo para React Native</td><td class="num">3</td><td></td><td></td></tr>
+      <tr><td>G2. Repositorio y entregables</td><td class="num">2</td><td></td><td></td></tr>
+      <tr class="total"><td>Total</td><td class="num">100</td><td></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <div class="tabla"><table>
+    <tbody>
+      <tr class="linea-firma"><th style="width: 28%">Resultado</th><td>☐ Aprobado &nbsp;&nbsp;&nbsp; ☐ No aprobado</td></tr>
+      <tr class="linea-firma"><th>Retroalimentación</th><td style="height: 90px"></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>Ficha 3406211 · Node.js · SENA 2026</footer>
+
+</main>
+</body>
+</html>
