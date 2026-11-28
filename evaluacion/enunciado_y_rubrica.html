@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Evaluación · Backend con microservicios, OAuth 2.0 y reportes PDF · Ficha 3406211</title>
+<title>Evaluación · Backend con microservicios, OAuth 2.0 y reportes PDF · Fichas 3406204 y 3406211</title>
 <style>
   :root {
     --fondo: #f4f6f3;
@@ -164,7 +164,7 @@
   <p class="sobretitulo">SENA · Tecnólogo en Análisis y Desarrollo de Software · Node.js</p>
   <h1>Evaluación: backend con microservicios, autenticación OAuth 2.0 y reportes en PDF</h1>
   <dl class="ficha">
-    <div><dt>Ficha</dt><dd>3406211</dd></div>
+    <div><dt>Fichas</dt><dd>3406204 y 3406211</dd></div>
     <div><dt>Instructor</dt><dd>Mauricio Rivero</dd></div>
     <div><dt>Modalidad</dt><dd>Individual</dd></div>
     <div><dt>Publicación</dt><dd>27 de noviembre de 2026</dd></div>
@@ -205,7 +205,7 @@
     <tbody>
       <tr><td>1, 2 y 4</td><td>Módulos, npm y manejo de archivos.</td></tr>
       <tr><td>6 · Patrones de diseño</td><td>Los patrones exigidos en la sección 8.</td></tr>
-      <tr><td>7 y 8 · Bases de datos</td><td>Variables de entorno, consultas con parámetros, validaciones y manejo de errores.</td></tr>
+      <tr><td>7 y 8 · Bases de datos</td><td>Conexión a Supabase con el paquete <code>postgres</code>, variables de entorno, consultas con parámetros, validaciones y manejo de errores.</td></tr>
       <tr><td>10 · API REST</td><td>Express por capas, modelos con campos privados y el modelo de gestión de personal.</td></tr>
       <tr><td>11 · Microservicios</td><td>Servicios independientes, JWT, hash de contraseñas con sal y middleware de autenticación.</td></tr>
     </tbody>
@@ -233,6 +233,7 @@
             <li>La app en React Native: la evalúa otro instructor en clase (sección 11).</li>
             <li>Inicio de sesión con X (Twitter).</li>
             <li>Contenedores o API Gateway.</li>
+            <li>Supabase Auth: la autenticación la implementa usted.</li>
             <li>Roles y permisos: toda cuenta con sesión válida accede a todo.</li>
           </ul>
         </td>
@@ -245,7 +246,7 @@
   <h2>3. Arquitectura requerida</h2>
 
   <figure>
-    <svg viewBox="0 0 900 400" role="img" aria-label="La aplicación cliente llama a los tres microservicios, desplegados cada uno desde su rama. Autenticación usa la base authentication, Google, Facebook y el servicio de correo EmailJS. Gestión de personal usa la base personal_management. Reportes pide los datos a gestión de personal por HTTP.">
+    <svg viewBox="0 0 900 400" role="img" aria-label="La aplicación cliente llama a los tres microservicios, desplegados cada uno desde su rama. Autenticación usa el esquema authentication en Supabase, Google, Facebook y el servicio de correo EmailJS. Gestión de personal usa el esquema personal_management en Supabase. Reportes pide los datos a gestión de personal por HTTP.">
       <defs>
         <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0 0 L10 5 L0 10 z" style="fill: var(--suave)"></path>
@@ -283,7 +284,7 @@
       <path class="flecha" d="M450 216 L450 298"></path>
 
       <rect class="caja" x="10" y="300" width="140" height="64" rx="8"></rect>
-      <text class="titulo" x="80" y="327">MySQL en la nube</text>
+      <text class="titulo" x="80" y="327">Supabase</text>
       <text x="80" y="347">authentication</text>
 
       <rect class="caja" x="165" y="300" width="150" height="64" rx="8"></rect>
@@ -291,7 +292,7 @@
       <text x="240" y="347">Google · FB · EmailJS</text>
 
       <rect class="caja" x="355" y="300" width="190" height="64" rx="8"></rect>
-      <text class="titulo" x="450" y="327">MySQL en la nube</text>
+      <text class="titulo" x="450" y="327">Supabase</text>
       <text x="450" y="347">personal_management</text>
     </svg>
     <figcaption>Cada servicio se despliega por separado desde su rama. Los tres comparten <code>JWT_SECRET</code>: uno firma el token y los otros lo verifican.</figcaption>
@@ -300,8 +301,8 @@
   <div class="tabla"><table>
     <thead><tr><th>Microservicio</th><th>Rama</th><th class="num">Puerto local</th><th>Datos</th><th>Responsabilidad</th></tr></thead>
     <tbody>
-      <tr><td>Autenticación</td><td><code>srv-autenticacion</code></td><td class="num">3001</td><td>Base <code>authentication</code></td><td>Registro, verificación de correo, inicio de sesión y emisión del JWT.</td></tr>
-      <tr><td>Gestión de personal</td><td><code>srv-gestion</code></td><td class="num">3000</td><td>Base <code>personal_management</code></td><td>Personas, teléfonos, redes sociales y perfiles sociales.</td></tr>
+      <tr><td>Autenticación</td><td><code>srv-autenticacion</code></td><td class="num">3001</td><td>Esquema <code>authentication</code></td><td>Registro, verificación de correo, inicio de sesión y emisión del JWT.</td></tr>
+      <tr><td>Gestión de personal</td><td><code>srv-gestion</code></td><td class="num">3000</td><td>Esquema <code>personal_management</code></td><td>Personas, teléfonos, redes sociales y perfiles sociales.</td></tr>
       <tr><td>Reportes</td><td><code>srv-reportes</code></td><td class="num">3002</td><td>Sin base propia</td><td>Generar el PDF con los datos que entrega gestión de personal.</td></tr>
     </tbody>
   </table></div>
@@ -310,7 +311,7 @@
   <ul>
     <li>Cada microservicio tiene su propio <code>package.json</code>, sus variables de entorno y su comando <code>npm start</code>, y vive en su propia rama (sección 9).</li>
     <li>Cada uno se despliega por separado, sin tocar los otros.</li>
-    <li>Ningún microservicio consulta la base de datos de otro. Reportes obtiene la información <strong>por HTTPS</strong>.</li>
+    <li>Ningún microservicio consulta las tablas de otro. Reportes obtiene la información <strong>por HTTPS</strong>.</li>
     <li>Cada servicio se organiza por capas: rutas → middleware → controladores → services → modelos.</li>
     <li>Cada servicio protegido verifica el token por sí mismo y responde <code>401</code> si falta, es falso o expiró.</li>
   </ul>
@@ -363,13 +364,13 @@
     </tbody>
   </table></div>
   <div class="aviso">
-    <p><strong>Atención si reutiliza la clase 11:</strong> allí no hay registro y la cuenta de base de datos solo tiene permiso de <strong>lectura</strong> sobre <code>authentication</code>. Aquí el servicio también escribe: actualice los permisos, la tabla de cuentas y los scripts SQL (los de la clase crean usuarios <code>@localhost</code>, que no existen en la nube). Necesitará guardar al menos la cuenta, las identidades de Google y Facebook y los códigos de verificación.</p>
+    <p><strong>Atención si reutiliza la clase 11:</strong> allí no hay registro y el código y los scripts son para MySQL. Aquí el servicio también escribe y la base es PostgreSQL (numeral 9.4). Necesitará guardar al menos la cuenta, las identidades de Google y Facebook y los códigos de verificación.</p>
   </div>
 </section>
 
 <section id="gestion">
   <h2>5. Microservicio de gestión de personal</h2>
-  <p>Mantiene el modelo de las clases 10 y 11, con las tablas <code>USUARIO</code> (personas), <code>TELEFONO</code>, <code>RED_SOCIAL</code> y <code>PERFIL_SOCIAL</code>. Las <strong>cuentas</strong> que inician sesión son distintas de las <strong>personas</strong> registradas.</p>
+  <p>Mantiene el modelo de las clases 10 y 11, ahora en PostgreSQL, con las tablas <code>USUARIO</code> (personas), <code>TELEFONO</code>, <code>RED_SOCIAL</code> y <code>PERFIL_SOCIAL</code>. Las <strong>cuentas</strong> que inician sesión son distintas de las <strong>personas</strong> registradas.</p>
 
   <div class="tabla"><table>
     <thead><tr><th>Recurso</th><th>Endpoints (todos exigen token)</th></tr></thead>
@@ -398,7 +399,7 @@
 
   <h3>6.1 Obtención de los datos</h3>
   <ul>
-    <li>Los pide por HTTPS al microservicio de gestión de personal, reenviando el token del usuario. No se conecta a MySQL.</li>
+    <li>Los pide por HTTPS al microservicio de gestión de personal, reenviando el token del usuario. No se conecta a la base de datos.</li>
     <li>La dirección pública de ese servicio se configura en una variable de entorno.</li>
     <li>Tenga en cuenta que <code>GET /api/usuarios</code>, tal como está en la clase 11, devuelve los teléfonos y perfiles vacíos: combine varios endpoints o cree uno que entregue todo junto.</li>
   </ul>
@@ -447,7 +448,9 @@
 
   <h3>8.1 Tecnología</h3>
   <ul>
-    <li>Node.js 20.12 o superior, Express y MySQL 8 (o un servicio compatible en la nube).</li>
+    <li>Node.js 20.12 o superior y Express.</li>
+    <li>Base de datos <strong>PostgreSQL en Supabase</strong>, con el paquete <code>postgres</code> de las clases 7 y 8, o con <code>pg</code> (numeral 9.4).</li>
+    <li>Supabase se usa <strong>solo como base de datos</strong>, sin Supabase Auth: el registro, la verificación, el ingreso con Google y Facebook y el JWT los implementa usted.</li>
     <li>CommonJS o ES Modules, sin mezclarlos dentro de un mismo servicio.</li>
     <li>Todas las consultas SQL con parámetros; nunca concatenando valores.</li>
     <li>Credenciales y secretos solo en variables de entorno: <code>.env</code> en local y panel de Vercel o Render en el despliegue. Nunca en el código ni en el repositorio.</li>
@@ -553,11 +556,31 @@
   <div class="tabla"><table>
     <thead><tr><th>Tema</th><th>Qué debe tener en cuenta</th></tr></thead>
     <tbody>
-      <tr><td>Base de datos</td><td>La plataforma no llega al MySQL de su equipo: use un MySQL en la nube con conexión cifrada (TLS). Una opción con plan gratuito es TiDB Cloud Starter, compatible con MySQL; compruebe que respete las llaves foráneas. Aiven ya no ofrece MySQL gratuito.</td></tr>
       <tr><td>Correo</td><td>EmailJS funciona por HTTPS, así que no lo afecta el bloqueo de puertos SMTP del plan gratuito de Render. El plan gratuito de EmailJS permite 200 envíos al mes, 2 plantillas y 1 petición por segundo; al agotar la cuota, los envíos adicionales se descartan.</td></tr>
       <tr><td>Memoria</td><td>El servicio puede reiniciarse o ejecutarse en varias instancias. El <code>state</code> de OAuth, los códigos de un solo uso y los intentos de verificación se guardan en la base de datos (el <code>state</code> también puede ir en una cookie firmada), no en variables en memoria.</td></tr>
       <tr><td>Archivos</td><td>No dependa de guardar archivos en el servidor: genere el PDF y envíelo directamente.</td></tr>
       <tr><td>Suspensión</td><td>Un servicio gratuito de Render se suspende tras 15 minutos sin tráfico y tarda cerca de un minuto en volver. Dé tiempos de espera suficientes entre servicios.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>9.4 Base de datos: PostgreSQL en Supabase</h3>
+  <ul>
+    <li>La base de datos en la nube es <strong>PostgreSQL en Supabase</strong>.</li>
+    <li>Basta un proyecto con dos esquemas, <code>authentication</code> y <code>personal_management</code> (también puede usar dos proyectos). Cada servicio usa solo el suyo. No cree las tablas en <code>public</code>, porque Supabase puede exponerlas por su Data API.</li>
+    <li>Conéctese por el <em>pooler</em>: la conexión directa del plan gratuito usa solo IPv6. Copie el host y el usuario (<code>postgres.[ref-del-proyecto]</code>) de la ventana <em>Connect</em>, y use conexión cifrada (SSL).</li>
+    <li><strong>Render:</strong> modo <em>session</em>, puerto 5432. <strong>Vercel:</strong> modo <em>transaction</em>, puerto 6543, sin sentencias preparadas (<code>{ prepare: false }</code> en <code>postgres</code>, como en la clase 7). Si en Vercel las consultas se quedan colgadas, pruebe con <code>pg</code>.</li>
+    <li>El plan gratuito permite 2 proyectos activos y 500 MB, y pausa un proyecto tras una semana sin actividad.</li>
+  </ul>
+  <p><strong>Si parte del código de las clases 10 y 11</strong>, debe pasarlo de MySQL a PostgreSQL. La clase 7 trae un ejemplo de script adaptado (<code>script_homologado.sql</code>).</p>
+  <div class="tabla"><table>
+    <thead><tr><th>En las clases 10 y 11 (MySQL)</th><th>En PostgreSQL</th></tr></thead>
+    <tbody>
+      <tr><td><code>mysql2</code> y <code>pool.execute</code> con <code>?</code></td><td><code>postgres</code> con plantillas <code>sql`...${valor}`</code>, o <code>pg</code> con <code>$1</code>, <code>$2</code>.</td></tr>
+      <tr><td><code>AUTO_INCREMENT</code>, <code>DATETIME</code></td><td><code>GENERATED BY DEFAULT AS IDENTITY</code>, <code>TIMESTAMP</code> o <code>DATE</code>.</td></tr>
+      <tr><td><code>resultado.insertId</code></td><td><code>INSERT ... RETURNING id</code>.</td></tr>
+      <tr><td><code>ER_DUP_ENTRY</code></td><td>Código <code>23505</code> (<code>409</code>).</td></tr>
+      <tr><td><code>ER_NO_REFERENCED_ROW_2</code> y <code>ER_ROW_IS_REFERENCED_2</code></td><td>Ambos son <code>23503</code>: distinga si insertaba o actualizaba (<code>400</code>) o si borraba (<code>409</code>).</td></tr>
+      <tr><td>Nombres como <code>USUARIO_id</code> y alias como <code>AS redSocialId</code></td><td>Sin comillas dobles pasan a minúsculas: revise los scripts, los alias y la lectura de cada fila.</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -574,7 +597,7 @@
   <ul class="checklist">
     <li>El código de cada microservicio en su rama, con <code>.env.example</code> sin valores secretos y un <code>.gitignore</code> que excluya <code>.env</code> y <code>node_modules</code>.</li>
     <li>En <code>main</code>, un <code>README.md</code> con: descripción y diagrama; rama, plataforma y dirección de cada servicio; instalación local y pasos de despliegue; variables de entorno; configuración de Google y Facebook (direcciones de retorno) y de EmailJS (plantilla y variables); tabla de endpoints, tabla de patrones y paquete usado para el PDF.</li>
-    <li>Scripts SQL de las dos bases de datos, con datos de ejemplo ficticios.</li>
+    <li>Scripts SQL de PostgreSQL para los dos esquemas, con datos de ejemplo ficticios.</li>
     <li>Colección de Postman exportada, apuntando a las direcciones desplegadas, con casos correctos y casos de error.</li>
     <li>Capturas en <code>docs/evidencias/</code>: despliegue de cada servicio con su rama, registro y correo de verificación recibido, ingreso con Google, ingreso con Facebook, una operación de cada recurso, errores controlados y reporte descargado. Sin secretos visibles.</li>
     <li>Un PDF generado por el sistema desplegado (<code>docs/reporte_ejemplo.pdf</code>).</li>
@@ -600,12 +623,14 @@
     <li>Los tres servicios deben seguir activos hasta que termine la revisión en clase.</li>
     <li>Si un servicio no funciona desplegado, los criterios que dependen de él se califican, como máximo, en el nivel <em>Parcial</em>.</li>
     <li>Use datos de personas <strong>ficticios</strong>.</li>
+    <li>Si la autenticación la resuelve Supabase Auth, los criterios B1 a B4 no suman puntos.</li>
   </ul>
 
   <h3>11.2 Revisión en clase con React Native</h3>
   <p>El proyecto totalmente funcional (la app en React Native conectada al backend desplegado) se revisa en clase con <strong>otro instructor</strong>, quien evalúa la parte de React Native. Esta rúbrica califica únicamente el backend.</p>
   <p>Antes de la revisión:</p>
   <ul>
+    <li>Compruebe que el proyecto de Supabase no esté pausado.</li>
     <li>Abra la dirección de cada servicio para activarlo.</li>
     <li>Cambie <code>APP_REDIRECT_URL</code> al enlace profundo de su app.</li>
     <li>Tenga a mano sus cuentas de Google, Facebook y correo.</li>
@@ -654,7 +679,7 @@
       </tr>
       <tr>
         <td><strong>A2.</strong> Separación de datos</td>
-        <td><span class="pts">3</span>Cada base la usa un solo servicio y cada servicio verifica el token.</td>
+        <td><span class="pts">3</span>Cada esquema lo usa un solo servicio y cada servicio verifica el token.</td>
         <td><span class="pts">2</span>Hay algún cruce de responsabilidades.</td>
         <td><span class="pts">0–1</span>Los servicios comparten tablas.</td>
         <td class="num">3</td>
@@ -668,8 +693,8 @@
       </tr>
       <tr>
         <td><strong>A4.</strong> Despliegue funcional en Vercel o Render</td>
-        <td><span class="pts">6–7</span>Los tres responden en su dirección pública, con base de datos en la nube, y funcionan registro, ingreso, CRUD y reporte.</td>
-        <td><span class="pts">4–5</span>Alguna función falla en la nube o solo funcionan dos servicios.</td>
+        <td><span class="pts">6–7</span>Los tres responden en su dirección pública, con la base de datos en Supabase, y funcionan registro, ingreso, CRUD y reporte.</td>
+        <td><span class="pts">4–5</span>Alguna función falla en la nube, solo funcionan dos servicios o la base de datos no está en Supabase.</td>
         <td><span class="pts">0–3</span>Funciona un servicio o ninguno.</td>
         <td class="num">7</td>
       </tr>
@@ -890,7 +915,7 @@
   </table></div>
 </section>
 
-<footer>Ficha 3406211 · Node.js · SENA 2026</footer>
+<footer>Fichas 3406204 y 3406211 · Node.js · SENA 2026</footer>
 
 </main>
 </body>
